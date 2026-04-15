@@ -1,0 +1,16 @@
+@use '@/styles/index.scss' as *;
+
+$uni-color-primary: $color-primary;
+$uni-color-success: $color-success;
+$uni-color-warning: $color-warning;
+$uni-color-error: $color-danger;
+$uni-color-info: $color-info;
+
+$uni-text-color: $color-text-primary;
+$uni-text-color-grey: $color-text-secondary;
+$uni-text-color-placeholder: $color-text-placeholder;
+$uni-text-color-disable: $color-text-disabled;
+
+$uni-bg-color: $color-bg-card;
+$uni-bg-color-grey: $color-bg-page;
+$uni-border-color: $color-border;

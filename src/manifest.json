@@ -1,0 +1,21 @@
+{
+  "name": "Truth",
+  "appid": "__UNI__TRUTH__",
+  "description": "Truth：本地优先的赛博祭祖原型，默认不上传用户祭祖内容。",
+  "versionName": "0.1.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "app-plus": {
+    "usingComponents": true,
+    "nvueStyleCompiler": "uni-app"
+  },
+  "h5": {
+    "title": "Truth"
+  },
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false
+    }
+  }
+}

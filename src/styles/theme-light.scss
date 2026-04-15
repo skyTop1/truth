@@ -1,0 +1,130 @@
+@use './semantic.scss' as *;
+
+:root,
+page,
+.theme-light {
+  --color-primary: #{$color-primary};
+  --color-primary-pressed: #{$color-primary-pressed};
+  --color-primary-soft: #{$color-primary-soft};
+  --color-accent: #{$color-accent};
+  --color-accent-soft: #{$color-accent-soft};
+  --color-success: #{$color-success};
+  --color-warning: #{$color-warning};
+  --color-danger: #{$color-danger};
+  --color-info: #{$color-info};
+  --color-success-soft: #{$color-success-soft};
+  --color-warning-soft: #{$color-warning-soft};
+  --color-danger-soft: #{$color-danger-soft};
+  --color-info-soft: #{$color-info-soft};
+  --color-bg-page: #{$color-bg-page};
+  --color-bg-card: #{$color-bg-card};
+  --color-bg-muted: #{$color-bg-muted};
+  --color-text-primary: #{$color-text-primary};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-tertiary: #{$color-text-tertiary};
+  --color-text-placeholder: #{$color-text-placeholder};
+  --color-text-disabled: #{$color-text-disabled};
+  --color-overlay: #{$color-overlay};
+  --color-border: #{$color-border};
+  --color-border-strong: #{$color-border-strong};
+  --color-primary-border-soft: rgba(53, 90, 118, 0.18);
+  --color-success-border-soft: rgba(75, 127, 103, 0.24);
+  --color-warning-border-soft: rgba(181, 138, 71, 0.24);
+  --color-danger-border-soft: rgba(184, 91, 91, 0.24);
+  --shadow-card: #{$shadow-card};
+  --shadow-pop: #{$shadow-pop};
+  --color-cyber-space: #f4f7fb;
+  --color-cyber-space-deep: #edf2f7;
+  --color-cyber-surface: rgba(255, 255, 255, 0.82);
+  --color-cyber-surface-solid: rgba(255, 255, 255, 0.94);
+  --color-cyber-surface-soft: rgba(226, 234, 240, 0.82);
+  --color-cyber-surface-panel: rgba(242, 246, 249, 0.9);
+  --color-cyber-violet: #735acb;
+  --color-cyber-violet-strong: #6147b8;
+  --color-cyber-violet-soft: rgba(115, 90, 203, 0.12);
+  --color-cyber-violet-soft-strong: rgba(115, 90, 203, 0.18);
+  --color-cyber-violet-fog: rgba(115, 90, 203, 0.2);
+  --color-cyber-violet-glow: rgba(115, 90, 203, 0.22);
+  --color-cyber-cyan: #3c8faf;
+  --color-cyber-cyan-soft: #6db5d2;
+  --color-cyber-cyan-faint: rgba(60, 143, 175, 0.12);
+  --color-cyber-cyan-faint-strong: rgba(60, 143, 175, 0.18);
+  --color-cyber-cyan-border: rgba(60, 143, 175, 0.24);
+  --color-cyber-gold: #b88a3d;
+  --color-cyber-gold-soft: #d7b374;
+  --color-cyber-gold-faint: rgba(184, 138, 61, 0.1);
+  --color-cyber-gold-faint-strong: rgba(184, 138, 61, 0.2);
+  --color-cyber-gold-border: rgba(184, 138, 61, 0.4);
+  --color-cyber-hot: #c96c86;
+  --color-cyber-hot-soft: rgba(201, 108, 134, 0.14);
+  --color-cyber-hot-border: rgba(201, 108, 134, 0.26);
+  --color-cyber-text-primary: #1f2936;
+  --color-cyber-text-secondary: #526173;
+  --color-cyber-text-muted: #7a8797;
+  --color-cyber-text-disabled: rgba(122, 135, 151, 0.48);
+  --color-cyber-border: rgba(53, 90, 118, 0.12);
+  --color-cyber-border-strong: rgba(115, 90, 203, 0.2);
+  --color-cyber-panel-line: rgba(53, 90, 118, 0.08);
+  --color-cyber-panel-line-strong: rgba(60, 143, 175, 0.18);
+  --color-cyber-white-ghost: rgba(255, 255, 255, 0.02);
+  --color-cyber-white-faint: rgba(255, 255, 255, 0.04);
+  --color-cyber-white-soft: rgba(255, 255, 255, 0.08);
+  --color-cyber-white-sheen: rgba(255, 255, 255, 0.14);
+  --color-cyber-cyan-trace: rgba(60, 143, 175, 0.08);
+  --color-cyber-cyan-glow: rgba(60, 143, 175, 0.16);
+  --color-cyber-violet-shadow: rgba(115, 90, 203, 0.16);
+  --color-cyber-violet-shadow-strong: rgba(89, 70, 160, 0.26);
+  --color-cyber-gold-shadow: rgba(184, 138, 61, 0.16);
+  --color-cyber-gold-glow: rgba(184, 138, 61, 0.2);
+  --color-cyber-gold-fog: rgba(184, 138, 61, 0.22);
+  --color-cyber-overlay: rgba(30, 40, 51, 0.18);
+  --color-cyber-panel: rgba(255, 255, 255, 0.86);
+  --color-cyber-panel-strong: rgba(255, 255, 255, 0.96);
+  --color-cyber-panel-soft: rgba(240, 245, 248, 0.9);
+  --color-cyber-nav: rgba(255, 255, 255, 0.94);
+  --color-cyber-nav-soft: rgba(242, 246, 249, 0.92);
+  --gradient-cyber-page: linear-gradient(180deg, #f8fbfd 0%, #edf3f7 44%, #f5f8fb 100%);
+  --gradient-cyber-panel: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(238, 243, 247, 0.96) 100%);
+  --gradient-cyber-panel-strong: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(232, 238, 244, 0.98) 100%);
+  --gradient-cyber-nav: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(241, 246, 249, 0.94) 100%);
+  --gradient-cyber-nav-strong: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(237, 243, 247, 0.96) 100%);
+  --gradient-cyber-button: linear-gradient(135deg, #355a76 0%, #587d76 110%);
+  --gradient-cyber-button-secondary: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(242, 246, 249, 0.96) 100%);
+  --gradient-cyber-sheen: linear-gradient(180deg, var(--color-cyber-white-sheen) 0%, transparent 100%);
+  --gradient-cyber-sheen-soft: linear-gradient(180deg, var(--color-cyber-white-faint) 0%, transparent 100%);
+  --gradient-cyber-highlight: linear-gradient(90deg, rgba(60, 143, 175, 0) 0%, rgba(60, 143, 175, 0.18) 50%, rgba(201, 108, 134, 0) 100%);
+  --shadow-cyber-button-primary:
+    0 18rpx 40rpx rgba(53, 90, 118, 0.18),
+    0 0 44rpx rgba(88, 125, 118, 0.12);
+  --shadow-cyber-button-danger: 0 16rpx 38rpx rgba(184, 91, 91, 0.18);
+  --shadow-cyber-glow:
+    0 0 0 2rpx rgba(60, 143, 175, 0.06),
+    0 24rpx 68rpx rgba(53, 90, 118, 0.12),
+    0 0 72rpx rgba(115, 90, 203, 0.12);
+  --shadow-cyber-panel:
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.78),
+    0 20rpx 54rpx rgba(53, 90, 118, 0.12);
+  --shadow-cyber-float:
+    0 24rpx 72rpx rgba(53, 90, 118, 0.14),
+    0 0 0 2rpx rgba(60, 143, 175, 0.05),
+    0 0 72rpx rgba(115, 90, 203, 0.12);
+  --shadow-cyber-inset:
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.72),
+    inset 0 -18rpx 36rpx rgba(53, 90, 118, 0.08);
+  --overlay-cyber-grid:
+    linear-gradient(rgba(53, 90, 118, 0.06) 1rpx, transparent 1rpx),
+    linear-gradient(90deg, rgba(53, 90, 118, 0.06) 1rpx, transparent 1rpx);
+  --overlay-cyber-scanline: repeating-linear-gradient(
+    180deg,
+    rgba(53, 90, 118, 0.03) 0,
+    rgba(53, 90, 118, 0.03) 2rpx,
+    transparent 2rpx,
+    transparent 8rpx
+  );
+  --radius-cyber-chip: 999rpx;
+  --radius-cyber-card: 28rpx;
+  --radius-cyber-panel: 36rpx;
+  --radius-cyber-hero: 42rpx;
+  --duration-cyber-fast: 180ms;
+  --duration-cyber-base: 260ms;
+}

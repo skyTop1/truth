@@ -1,0 +1,52 @@
+@use './theme-light.scss';
+@use './theme-dark.scss';
+@use './theme-solid.scss';
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+page,
+body {
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-size: 28rpx;
+  font-family:
+    'Avenir Next',
+    'PingFang SC',
+    'Noto Sans SC',
+    'Microsoft YaHei',
+    sans-serif;
+}
+
+view,
+text,
+button,
+input,
+textarea,
+image {
+  box-sizing: border-box;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+image {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,35 @@
+@use './tokens.scss' as *;
+
+$color-primary: $brand-600;
+$color-primary-pressed: $brand-700;
+$color-primary-soft: $brand-50;
+
+$color-accent: $accent-500;
+$color-accent-soft: $accent-50;
+
+$color-success: $success;
+$color-warning: $warning;
+$color-danger: $danger;
+$color-info: $info;
+
+$color-success-soft: $success-bg;
+$color-warning-soft: $warning-bg;
+$color-danger-soft: $danger-bg;
+$color-info-soft: $info-bg;
+
+$color-bg-page: $gray-50;
+$color-bg-card: $gray-0;
+$color-bg-muted: $gray-100;
+
+$color-text-primary: $gray-900;
+$color-text-secondary: $gray-500;
+$color-text-tertiary: $gray-600;
+$color-text-placeholder: $gray-400;
+$color-text-disabled: $gray-300;
+
+$color-border: $gray-200;
+$color-border-strong: $gray-300;
+$color-overlay: rgba(16, 24, 40, 0.18);
+
+$shadow-card: 0 16rpx 48rpx rgba(20, 32, 44, 0.06);
+$shadow-pop: 0 20rpx 56rpx rgba(20, 32, 44, 0.12);

@@ -1,0 +1,233 @@
+.theme-solid-altar-gold {
+  --color-primary: #c8a45c;
+  --color-primary-pressed: #a88443;
+  --color-primary-soft: #2b2418;
+  --color-accent: #6f8894;
+  --color-accent-soft: #1b2730;
+  --color-success: #6d8a74;
+  --color-warning: #c8a45c;
+  --color-danger: #c8827d;
+  --color-info: #7f98a4;
+  --color-success-soft: #1d2b23;
+  --color-warning-soft: #2d2418;
+  --color-danger-soft: #30201f;
+  --color-info-soft: #1d2730;
+  --color-bg-page: #121416;
+  --color-bg-card: #1b1f23;
+  --color-bg-muted: #23282e;
+  --color-text-primary: #f3eee5;
+  --color-text-secondary: #c8c0b2;
+  --color-text-tertiary: #a19789;
+  --color-text-placeholder: #71695f;
+  --color-text-disabled: #59524a;
+  --color-overlay: rgba(9, 10, 12, 0.48);
+  --color-border: #363028;
+  --color-border-strong: #4c4337;
+  --color-primary-border-soft: rgba(200, 164, 92, 0.28);
+  --color-success-border-soft: rgba(109, 138, 116, 0.28);
+  --color-warning-border-soft: rgba(200, 164, 92, 0.32);
+  --color-danger-border-soft: rgba(200, 130, 125, 0.28);
+  --shadow-card: 0 18rpx 52rpx rgba(0, 0, 0, 0.24);
+  --shadow-pop: 0 24rpx 72rpx rgba(0, 0, 0, 0.32);
+  --color-cyber-space: #111214;
+  --color-cyber-space-deep: #090a0b;
+  --color-cyber-surface: rgba(27, 31, 35, 0.82);
+  --color-cyber-surface-solid: rgba(27, 31, 35, 0.92);
+  --color-cyber-surface-soft: rgba(35, 40, 46, 0.76);
+  --color-cyber-surface-panel: rgba(18, 21, 24, 0.68);
+  --color-cyber-violet: #786871;
+  --color-cyber-violet-strong: #675660;
+  --color-cyber-violet-soft: transparent;
+  --color-cyber-violet-soft-strong: transparent;
+  --color-cyber-violet-fog: transparent;
+  --color-cyber-violet-glow: rgba(120, 104, 113, 0.16);
+  --color-cyber-cyan: #6f8894;
+  --color-cyber-cyan-soft: #90a7b0;
+  --color-cyber-cyan-faint: transparent;
+  --color-cyber-cyan-faint-strong: transparent;
+  --color-cyber-cyan-border: rgba(111, 136, 148, 0.28);
+  --color-cyber-gold: #c8a45c;
+  --color-cyber-gold-soft: #dcc18a;
+  --color-cyber-gold-faint: rgba(200, 164, 92, 0.1);
+  --color-cyber-gold-faint-strong: rgba(200, 164, 92, 0.24);
+  --color-cyber-gold-border: rgba(200, 164, 92, 0.48);
+  --color-cyber-hot: #c8827d;
+  --color-cyber-hot-soft: rgba(200, 130, 125, 0.14);
+  --color-cyber-hot-border: rgba(200, 130, 125, 0.28);
+  --color-cyber-text-primary: #f3eee5;
+  --color-cyber-text-secondary: #d2c7b4;
+  --color-cyber-text-muted: #968b7f;
+  --color-cyber-text-disabled: rgba(150, 139, 127, 0.48);
+  --color-cyber-border: rgba(200, 164, 92, 0.16);
+  --color-cyber-border-strong: rgba(111, 136, 148, 0.26);
+  --color-cyber-panel-line: rgba(200, 164, 92, 0.1);
+  --color-cyber-panel-line-strong: rgba(111, 136, 148, 0.22);
+  --color-cyber-white-ghost: transparent;
+  --color-cyber-white-faint: transparent;
+  --color-cyber-white-soft: rgba(255, 255, 255, 0.08);
+  --color-cyber-white-sheen: rgba(255, 255, 255, 0.12);
+  --color-cyber-cyan-trace: rgba(111, 136, 148, 0.08);
+  --color-cyber-cyan-glow: rgba(111, 136, 148, 0.16);
+  --color-cyber-violet-shadow: rgba(120, 104, 113, 0.14);
+  --color-cyber-violet-shadow-strong: rgba(42, 31, 37, 0.42);
+  --color-cyber-gold-shadow: rgba(200, 164, 92, 0.18);
+  --color-cyber-gold-glow: rgba(200, 164, 92, 0.18);
+  --color-cyber-gold-fog: rgba(200, 164, 92, 0.2);
+  --color-cyber-overlay: rgba(7, 8, 10, 0.56);
+  --color-cyber-panel: rgba(25, 28, 32, 0.84);
+  --color-cyber-panel-strong: rgba(29, 33, 37, 0.94);
+  --color-cyber-panel-soft: rgba(31, 35, 40, 0.78);
+  --color-cyber-nav: rgba(18, 20, 23, 0.92);
+  --color-cyber-nav-soft: rgba(27, 31, 35, 0.88);
+  --gradient-cyber-page: var(--color-bg-page);
+  --gradient-cyber-panel: var(--color-cyber-panel);
+  --gradient-cyber-panel-strong: var(--color-cyber-panel-strong);
+  --gradient-cyber-nav: var(--color-cyber-nav);
+  --gradient-cyber-nav-strong: var(--color-cyber-nav-soft);
+  --gradient-cyber-button: var(--color-primary);
+  --gradient-cyber-button-secondary: var(--color-cyber-panel);
+  --gradient-cyber-sheen: transparent;
+  --gradient-cyber-sheen-soft: transparent;
+  --gradient-cyber-highlight: transparent;
+  --shadow-cyber-button-primary:
+    0 16rpx 36rpx rgba(0, 0, 0, 0.3),
+    0 0 0 2rpx rgba(200, 164, 92, 0.12);
+  --shadow-cyber-button-danger: 0 16rpx 36rpx rgba(80, 34, 30, 0.28);
+  --shadow-cyber-glow:
+    0 0 0 2rpx rgba(200, 164, 92, 0.08),
+    0 24rpx 68rpx rgba(0, 0, 0, 0.36);
+  --shadow-cyber-panel:
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.04),
+    0 22rpx 64rpx rgba(0, 0, 0, 0.34);
+  --shadow-cyber-float:
+    0 28rpx 80rpx rgba(0, 0, 0, 0.38),
+    0 0 0 2rpx rgba(111, 136, 148, 0.05);
+  --shadow-cyber-inset:
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.04),
+    inset 0 -18rpx 36rpx rgba(0, 0, 0, 0.18);
+  --overlay-cyber-grid: none;
+  --overlay-cyber-scanline: none;
+  --radius-cyber-chip: 999rpx;
+  --radius-cyber-card: 28rpx;
+  --radius-cyber-panel: 36rpx;
+  --radius-cyber-hero: 42rpx;
+  --duration-cyber-fast: 180ms;
+  --duration-cyber-base: 260ms;
+}
+
+.theme-solid-stele-cyan {
+  --color-primary: #546a6f;
+  --color-primary-pressed: #43545a;
+  --color-primary-soft: #eaf0f1;
+  --color-accent: #8a7254;
+  --color-accent-soft: #f3eee7;
+  --color-success: #607b62;
+  --color-warning: #a88552;
+  --color-danger: #b16a64;
+  --color-info: #607784;
+  --color-success-soft: #eef4ef;
+  --color-warning-soft: #f5eee4;
+  --color-danger-soft: #f7eeed;
+  --color-info-soft: #edf2f5;
+  --color-bg-page: #f4f1eb;
+  --color-bg-card: #fffcf7;
+  --color-bg-muted: #ebe6de;
+  --color-text-primary: #2d3134;
+  --color-text-secondary: #636a6f;
+  --color-text-tertiary: #7b8288;
+  --color-text-placeholder: #a4a9ad;
+  --color-text-disabled: #c3c7cc;
+  --color-overlay: rgba(34, 33, 30, 0.16);
+  --color-border: #d8d1c8;
+  --color-border-strong: #c7beb3;
+  --color-primary-border-soft: rgba(84, 106, 111, 0.18);
+  --color-success-border-soft: rgba(96, 123, 98, 0.22);
+  --color-warning-border-soft: rgba(168, 133, 82, 0.22);
+  --color-danger-border-soft: rgba(177, 106, 100, 0.2);
+  --shadow-card: 0 16rpx 48rpx rgba(78, 71, 58, 0.08);
+  --shadow-pop: 0 22rpx 60rpx rgba(78, 71, 58, 0.14);
+  --color-cyber-space: #f2eee7;
+  --color-cyber-space-deep: #ebe4da;
+  --color-cyber-surface: rgba(255, 252, 247, 0.84);
+  --color-cyber-surface-solid: rgba(255, 252, 247, 0.96);
+  --color-cyber-surface-soft: rgba(244, 239, 232, 0.84);
+  --color-cyber-surface-panel: rgba(248, 244, 238, 0.92);
+  --color-cyber-violet: #837680;
+  --color-cyber-violet-strong: #70636d;
+  --color-cyber-violet-soft: transparent;
+  --color-cyber-violet-soft-strong: transparent;
+  --color-cyber-violet-fog: transparent;
+  --color-cyber-violet-glow: rgba(131, 118, 128, 0.16);
+  --color-cyber-cyan: #546a6f;
+  --color-cyber-cyan-soft: #7d9296;
+  --color-cyber-cyan-faint: transparent;
+  --color-cyber-cyan-faint-strong: transparent;
+  --color-cyber-cyan-border: rgba(84, 106, 111, 0.22);
+  --color-cyber-gold: #a88552;
+  --color-cyber-gold-soft: #c0a176;
+  --color-cyber-gold-faint: rgba(168, 133, 82, 0.08);
+  --color-cyber-gold-faint-strong: rgba(168, 133, 82, 0.16);
+  --color-cyber-gold-border: rgba(168, 133, 82, 0.28);
+  --color-cyber-hot: #b16a64;
+  --color-cyber-hot-soft: rgba(177, 106, 100, 0.12);
+  --color-cyber-hot-border: rgba(177, 106, 100, 0.22);
+  --color-cyber-text-primary: #2d3134;
+  --color-cyber-text-secondary: #636a6f;
+  --color-cyber-text-muted: #878078;
+  --color-cyber-text-disabled: rgba(135, 128, 120, 0.48);
+  --color-cyber-border: rgba(84, 106, 111, 0.12);
+  --color-cyber-border-strong: rgba(138, 114, 84, 0.18);
+  --color-cyber-panel-line: rgba(84, 106, 111, 0.08);
+  --color-cyber-panel-line-strong: rgba(84, 106, 111, 0.16);
+  --color-cyber-white-ghost: transparent;
+  --color-cyber-white-faint: transparent;
+  --color-cyber-white-soft: rgba(255, 255, 255, 0.74);
+  --color-cyber-white-sheen: rgba(255, 255, 255, 0.88);
+  --color-cyber-cyan-trace: rgba(84, 106, 111, 0.08);
+  --color-cyber-cyan-glow: rgba(84, 106, 111, 0.14);
+  --color-cyber-violet-shadow: rgba(131, 118, 128, 0.1);
+  --color-cyber-violet-shadow-strong: rgba(131, 118, 128, 0.18);
+  --color-cyber-gold-shadow: rgba(168, 133, 82, 0.1);
+  --color-cyber-gold-glow: rgba(168, 133, 82, 0.14);
+  --color-cyber-gold-fog: rgba(168, 133, 82, 0.16);
+  --color-cyber-overlay: rgba(45, 49, 52, 0.14);
+  --color-cyber-panel: rgba(255, 252, 247, 0.92);
+  --color-cyber-panel-strong: #fffcf7;
+  --color-cyber-panel-soft: rgba(244, 239, 232, 0.96);
+  --color-cyber-nav: rgba(255, 252, 247, 0.96);
+  --color-cyber-nav-soft: rgba(247, 242, 235, 0.94);
+  --gradient-cyber-page: var(--color-bg-page);
+  --gradient-cyber-panel: var(--color-cyber-panel);
+  --gradient-cyber-panel-strong: var(--color-cyber-panel-strong);
+  --gradient-cyber-nav: var(--color-cyber-nav);
+  --gradient-cyber-nav-strong: var(--color-cyber-nav-soft);
+  --gradient-cyber-button: var(--color-primary);
+  --gradient-cyber-button-secondary: var(--color-cyber-panel);
+  --gradient-cyber-sheen: transparent;
+  --gradient-cyber-sheen-soft: transparent;
+  --gradient-cyber-highlight: transparent;
+  --shadow-cyber-button-primary:
+    0 16rpx 36rpx rgba(84, 106, 111, 0.12),
+    0 0 0 2rpx rgba(84, 106, 111, 0.08);
+  --shadow-cyber-button-danger: 0 14rpx 30rpx rgba(177, 106, 100, 0.16);
+  --shadow-cyber-glow:
+    0 0 0 2rpx rgba(84, 106, 111, 0.05),
+    0 20rpx 54rpx rgba(78, 71, 58, 0.1);
+  --shadow-cyber-panel:
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.92),
+    0 18rpx 48rpx rgba(78, 71, 58, 0.1);
+  --shadow-cyber-float:
+    0 24rpx 72rpx rgba(78, 71, 58, 0.12),
+    0 0 0 2rpx rgba(84, 106, 111, 0.04);
+  --shadow-cyber-inset:
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.96),
+    inset 0 -18rpx 36rpx rgba(78, 71, 58, 0.04);
+  --overlay-cyber-grid: none;
+  --overlay-cyber-scanline: none;
+  --radius-cyber-chip: 999rpx;
+  --radius-cyber-card: 28rpx;
+  --radius-cyber-panel: 36rpx;
+  --radius-cyber-hero: 42rpx;
+  --duration-cyber-fast: 180ms;
+  --duration-cyber-base: 260ms;
+}
