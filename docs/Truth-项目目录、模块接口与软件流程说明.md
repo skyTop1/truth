@@ -13,6 +13,7 @@
 
 ```text
 .
+├── .gitignore
 ├── AGENTS.md
 ├── README.md
 ├── shrimp-rules.md
@@ -29,6 +30,7 @@
 
 | 路径 | 作用 |
 | --- | --- |
+| `.gitignore` | 本地仓库忽略规则，当前已排除 `node_modules`、`dist`、`.pnpm-store` 等本地产物。 |
 | `AGENTS.md` | 项目级代理规则，约束实现风格、前端定位和本地优先原则。 |
 | `shrimp-rules.md` | 项目补充规则，强调不接入接口、数据不出端。 |
 | `package.json` | 依赖与脚本入口。 |
@@ -76,7 +78,7 @@ src
 | 路径 | 说明 |
 | --- | --- |
 | `src/main.ts` | 创建 SSR App，注册 Pinia。 |
-| `src/App.vue` | uni-app 全局生命周期入口，当前只保留简单日志。 |
+| `src/App.vue` | uni-app 全局生命周期入口，在 `onLaunch / onShow` 阶段同步当前主题预设并保留基础日志。 |
 | `src/pages.json` | 页面路由、分包、全局导航样式、`easycom` 配置。 |
 | `src/manifest.json` | uni-app 工程平台配置。 |
 
@@ -88,7 +90,7 @@ src
 | `src/pages/workbench/index.vue` | 祖域页。负责本地历史、海报管理、备份导入导出、清空与删除。 |
 | `src/pages-sub/cyber/ritual-entry.vue` | 仪式接入页。负责填写祖先称呼、选择动作、填写文案、复用历史模板。 |
 | `src/pages-sub/cyber/ritual-result.vue` | 仪式结果页。负责落本地记录、恢复旧记录、生成海报、保存/预览海报。 |
-| `src/pages-sub/system/theme-preview.vue` | 赛博主题色板预览页。 |
+| `src/pages-sub/system/theme-preview.vue` | 主题预览页。当前既展示 token，也直接切换四套运行时主题预设。 |
 
 ### 3.3 组件层
 
@@ -98,7 +100,7 @@ src
 
 | 路径 | 说明 |
 | --- | --- |
-| `src/stores/app.ts` | 应用级状态，目前负责主题模式。 |
+| `src/stores/app.ts` | 应用级状态，负责当前主题预设、亮暗语义、主题缓存迁移与根节点 class 同步。 |
 | `src/stores/ritual.ts` | 核心业务 store，负责本地祖域仓读写、归档修复、记录和海报管理。 |
 
 ### 3.5 常量层
@@ -109,7 +111,7 @@ src
 | `src/constants/navigation.ts` | 自定义 tabBar 项。 |
 | `src/constants/ritual.ts` | 仪式动作模板、消息模板、祖域缓存 key 与版本。 |
 | `src/constants/status.ts` | 用户可见状态、中文映射、状态标签文案、旧英文兼容映射。 |
-| `src/constants/theme.ts` | 主题标签、赛博高亮词、色板 token。 |
+| `src/constants/theme.ts` | 四套运行时主题预设、亮暗映射、主题 class 和 token 展示数据。 |
 
 ### 3.6 工具层
 
@@ -117,6 +119,7 @@ src
 | --- | --- |
 | `src/utils/local-storage.ts` | 本地缓存读写封装。 |
 | `src/utils/local-id.ts` | 本地 ID 生成器。 |
+| `src/utils/theme-root.ts` | H5 根节点主题 class 同步工具。 |
 | `src/utils/uni-page.ts` | 页面参数读取与分享注册兼容层。 |
 
 ### 3.7 类型层
@@ -125,7 +128,7 @@ src
 | --- | --- |
 | `src/types/ritual.ts` | 仪式、海报、归档结构类型。 |
 | `src/types/navigation.ts` | tabBar 项类型。 |
-| `src/types/theme.ts` | 主题 token 与主题模式类型。 |
+| `src/types/theme.ts` | 主题模式、主题预设 ID、主题预设和 token 结构类型。 |
 
 ### 3.8 样式层
 
@@ -135,7 +138,9 @@ src
 | `src/styles/semantic.scss` | 语义色变量。 |
 | `src/styles/theme-light.scss` | 浅色主题变量。 |
 | `src/styles/theme-dark.scss` | 深色主题变量。 |
-| `src/styles/index.scss` | 全局样式入口。 |
+| `src/styles/theme-solid.scss` | 两套无渐变候选主题变量。 |
+| `src/styles/runtime-theme.scss` | 主题变量汇总入口，统一引入 light / dark / solid 三组主题。 |
+| `src/styles/index.scss` | `tokens` 与 `semantic` 统一导出入口。 |
 | `src/uni.scss` | uni-app 样式入口。 |
 
 ## 4. 路由与页面入口说明
@@ -148,7 +153,7 @@ src
 | `/pages/workbench/index` | 祖域 | 本地记录管理中心 |
 | `/pages-sub/cyber/ritual-entry` | 接入祖域 | 选择动作与文案 |
 | `/pages-sub/cyber/ritual-result` | 结果页 | 落记录、生成海报、分享 |
-| `/pages-sub/system/theme-preview` | 信号色板 | 查看赛博主题色 |
+| `/pages-sub/system/theme-preview` | 信号色板 | 查看并切换四套主题预设 |
 
 ### 4.2 页面参数接口
 
@@ -298,10 +303,15 @@ interface RitualArchive {
 | 字段 / 方法 | 类型 | 说明 |
 | --- | --- | --- |
 | `appName` | `Ref<string>` | 应用名，当前为 `Truth` |
-| `themeMode` | `Ref<'light' | 'dark'>` | 主题模式 |
+| `themePreset` | `Ref<ThemePresetId>` | 当前主题预设 ID，取值为 `light / dark / altar-gold / stele-cyan` |
+| `activeThemePreset` | `ComputedRef<ThemePreset>` | 当前主题预设完整配置 |
+| `themeMode` | `ComputedRef<'light' | 'dark'>` | 当前主题所属亮暗语义 |
 | `themeLabel` | `ComputedRef<string>` | 当前主题的人类可读标签 |
-| `setThemeMode(mode)` | `(mode: ThemeMode) => void` | 指定主题模式 |
+| `themeClass` | `ComputedRef<string>` | 当前主题对应的运行时 class |
+| `setThemePreset(presetId)` | `(presetId: ThemePresetId) => void` | 指定主题预设 |
+| `setThemeMode(mode)` | `(mode: ThemeMode) => void` | 按亮暗语义切换到默认主题预设 |
 | `toggleThemeMode()` | `() => void` | 切换主题模式 |
+| `hydrateThemeMode()` | `() => void` | 读取并迁移本地主题缓存，然后同步根节点 class |
 
 ### 7.2 `useRitualStore`
 
@@ -420,6 +430,8 @@ interface RitualArchive {
 | --- | --- | --- |
 | `RITUAL_ARCHIVE_STORAGE_KEY` | `truth.cyber-ritual.archive` | 本地祖域仓唯一存储键 |
 | `RITUAL_ARCHIVE_VERSION` | `2` | 当前缓存结构版本 |
+| `THEME_PRESET_STORAGE_KEY` | `truth-theme-preset` | 当前运行时主题预设缓存键 |
+| `THEME_MODE_STORAGE_KEY` | `truth-theme-mode` | 旧版亮暗主题缓存键，当前仅用于兼容迁移 |
 
 ### 10.2 读写策略
 
@@ -435,6 +447,29 @@ interface RitualArchive {
 
 - 旧英文 badge 会通过 `formatRitualBadgeLabel()` 自动转成中文显示。
 - 旧版 meta 缺失时，store 会自动补齐 `lastHydratedAt / lastMutationAt / lastBackupAt`。
+- 旧版 `truth-theme-mode` 会在启动时自动迁移到 `truth-theme-preset`。
+
+### 10.4 主题预设与运行时链路
+
+当前主题链路已经稳定为：
+
+`theme preset -> themeClass -> runtime-theme.scss -> AppThemePage / H5 root class -> 页面和组件消费 CSS 变量`
+
+当前四套运行时主题：
+
+| 预设 ID | 标签 | 语义模式 | class |
+| --- | --- | --- | --- |
+| `light` | `黛蓝灰` | `light` | `theme-light` |
+| `dark` | `夜航蓝` | `dark` | `theme-dark` |
+| `altar-gold` | `夜祠金` | `dark` | `theme-solid-altar-gold` |
+| `stele-cyan` | `碑青灰` | `light` | `theme-solid-stele-cyan` |
+
+约束说明：
+
+- 组件层继续统一消费现有 `--color-* / --gradient-cyber-* / --shadow-* / --overlay-*`
+- 无渐变主题不新增变量命名，只把 `--gradient-cyber-*` 降级为纯色或透明层
+- H5 通过 `theme-root.ts` 把 class 同步到 `html` / `body`
+- 页面容器通过 `AppThemePage` 承接当前主题 class，保证小程序和 H5 行为一致
 
 ## 11. 软件流程说明
 
@@ -456,9 +491,10 @@ interface RitualArchive {
 ### 11.2 启动流程
 
 1. `main.ts` 创建应用并挂载 Pinia。
-2. 首页或其他页面首次渲染时调用 `ritualStore.ensureHydrated()`。
-3. store 从本地读取 `truth.cyber-ritual.archive`。
-4. 页面基于 store 计算首页指标、祖域状态、最近记录、海报列表。
+2. `App.vue` 在 `onLaunch / onShow` 时调用 `appStore.hydrateThemeMode()`，同步主题预设。
+3. 首页或其他页面首次渲染时调用 `ritualStore.ensureHydrated()`。
+4. store 从本地读取 `truth.cyber-ritual.archive`。
+5. 页面基于 store 计算首页指标、祖域状态、最近记录、海报列表。
 
 ### 11.3 首页流程
 
