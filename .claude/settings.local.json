@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm run *)",
+      "Bash(kill %1)",
+      "Bash(npx vite *)",
+      "Bash(npx vue-tsc *)",
+      "WebFetch(domain:localhost)"
+    ]
+  }
+}

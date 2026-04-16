@@ -170,7 +170,7 @@ function openResultPage() {
 </script>
 
 <template>
-  <app-theme-page class="ritual-page ritual-page--cyber">
+  <app-theme-page class="ritual-page">
     <app-nav-bar title="接入祖域" subtitle="30 秒完成一次赛博仪式">
       <template #left>
         <view class="ritual-page__back" @click="goBack">
@@ -196,7 +196,7 @@ function openResultPage() {
         <app-input
           v-model="ancestorName"
           label="当前祖先节点"
-          placeholder="输入你想接入的祖先称呼，比如：太爷爷 A-108"
+          placeholder="输入你想接入的祖先称呼，比如：太爷爷"
         />
         <text class="ritual-page__identity-hint">不连云，不上传。你填的祖先称呼会优先保存在当前设备里。</text>
       </view>
@@ -286,57 +286,32 @@ function openResultPage() {
 .ritual-page {
   position: relative;
   min-height: 100vh;
-  background: var(--color-bg-page);
+  background: var(--scene-space);
   overflow: hidden;
 }
 
-.ritual-page--cyber {
-  --color-bg-page: var(--color-cyber-space);
-  --color-bg-card: var(--color-cyber-surface);
-  --color-bg-muted: var(--color-cyber-surface-soft);
-  --color-primary: var(--color-cyber-violet-strong);
-  --color-primary-pressed: var(--color-cyber-violet);
-  --color-primary-soft: var(--color-cyber-violet-soft);
-  --color-accent: var(--color-cyber-cyan);
-  --color-accent-soft: var(--color-cyber-cyan-faint);
-  --color-text-primary: var(--color-cyber-text-primary);
-  --color-text-secondary: var(--color-cyber-text-secondary);
-  --color-text-tertiary: var(--color-cyber-text-muted);
-  --color-text-placeholder: var(--color-cyber-text-muted);
-  --color-text-disabled: var(--color-cyber-text-disabled);
-  --color-border: var(--color-cyber-border);
-  --color-border-strong: var(--color-cyber-border-strong);
-  --color-primary-border-soft: var(--color-cyber-violet-soft-strong);
-  --color-overlay: var(--color-cyber-overlay);
-  --shadow-card: var(--shadow-cyber-panel);
-  --shadow-pop: var(--shadow-cyber-float);
-}
-
-.ritual-page--cyber::before {
+.ritual-page::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 18% 0%, var(--color-cyber-violet-soft-strong) 0%, transparent 28%),
-    radial-gradient(circle at 88% 20%, var(--color-cyber-cyan-faint) 0%, transparent 18%),
-    radial-gradient(circle at 18% 82%, var(--color-cyber-hot-soft) 0%, transparent 18%),
-    var(--gradient-cyber-page);
+    radial-gradient(circle at top right, var(--color-primary-light-2) 0, transparent 34%),
+    linear-gradient(180deg, var(--color-primary-light-1) 0, transparent 260rpx);
   pointer-events: none;
 }
 
-.ritual-page--cyber::after {
+.ritual-page::after {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: var(--overlay-cyber-grid);
-  background-size: 48rpx 48rpx;
-  opacity: 0.1;
+  background: radial-gradient(circle at left 18%, var(--color-link-light-1) 0, transparent 26%);
+  opacity: 0.72;
   pointer-events: none;
 }
 
-.ritual-page--cyber :deep(.app-nav-bar) {
-  background: var(--gradient-cyber-nav);
-  border-color: var(--color-cyber-border);
+:deep(.app-nav-bar) {
+  background: var(--scene-nav);
+  border-color: var(--scene-border-1);
 }
 
 .ritual-page__back {
@@ -345,10 +320,10 @@ function openResultPage() {
   justify-content: center;
   width: 84rpx;
   height: 84rpx;
-  border: 2rpx solid var(--color-cyber-cyan-faint);
+  border: 2rpx solid var(--color-link-light-3);
   border-radius: 24rpx;
-  background: var(--color-cyber-cyan-trace);
-  color: var(--color-cyber-cyan);
+  background: var(--color-link-light-1);
+  color: var(--link-6);
 }
 
 .ritual-page__content {
@@ -370,32 +345,16 @@ function openResultPage() {
   flex-direction: column;
   gap: 16rpx;
   padding: 28rpx;
-  border: 2rpx solid var(--color-cyber-border);
-  border-radius: var(--radius-cyber-panel);
-  background:
-    radial-gradient(circle at 100% 0%, var(--color-cyber-cyan-trace) 0%, transparent 18%),
-    var(--gradient-cyber-panel);
-  box-shadow: var(--shadow-card);
-}
-
-.ritual-page__hero::before,
-.ritual-page__identity-card::before,
-.ritual-page__message-card::before,
-.ritual-page__footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 28rpx;
-  right: 28rpx;
-  height: 2rpx;
-  background: var(--gradient-cyber-highlight);
-  pointer-events: none;
+  border: 2rpx solid var(--scene-border-1);
+  border-radius: var(--border-radius-xlarge);
+  background: var(--scene-panel);
+  box-shadow: var(--scene-shadow-panel);
 }
 
 .ritual-page__identity-hint {
   font-size: 22rpx;
   line-height: 1.8;
-  color: var(--color-text-secondary);
+  color: var(--scene-text-2);
 }
 
 .ritual-page__tag-list {
@@ -410,15 +369,15 @@ function openResultPage() {
   font-weight: 700;
   line-height: 1.08;
   letter-spacing: 1rpx;
-  color: var(--color-text-primary);
-  text-shadow: 0 0 32rpx var(--color-cyber-violet-shadow);
+  color: var(--scene-text-1);
+  text-shadow: 0 0 32rpx var(--color-primary-light-3);
 }
 
 .ritual-page__subtitle,
 .ritual-page__footer-text {
   font-size: 23rpx;
   line-height: 1.82;
-  color: var(--color-text-secondary);
+  color: var(--scene-text-2);
 }
 
 .ritual-page__stats {
@@ -433,25 +392,23 @@ function openResultPage() {
   flex-direction: column;
   gap: 10rpx;
   padding: 20rpx 18rpx;
-  border: 2rpx solid var(--color-cyber-panel-line);
+  border: 2rpx solid var(--color-primary-light-2);
   border-radius: 24rpx;
-  background:
-    var(--gradient-cyber-sheen-soft),
-    var(--color-cyber-panel);
-  box-shadow: var(--shadow-cyber-inset);
+  background: var(--scene-panel);
+  box-shadow: var(--scene-shadow-inset);
 }
 
 .ritual-page__stat-value {
   font-size: 34rpx;
   font-weight: 700;
-  color: var(--color-cyber-gold);
-  text-shadow: 0 0 20rpx var(--color-cyber-gold-glow);
+  color: var(--primary-6);
+  text-shadow: 0 0 20rpx var(--color-primary-light-2);
 }
 
 .ritual-page__stat-label {
   font-size: 19rpx;
   letter-spacing: 2rpx;
-  color: var(--color-text-tertiary);
+  color: var(--scene-text-3);
 }
 
 .ritual-page__actions,
@@ -475,27 +432,25 @@ function openResultPage() {
   font-size: 30rpx;
   font-weight: 700;
   letter-spacing: 1rpx;
-  color: var(--color-text-primary);
+  color: var(--scene-text-1);
 }
 
 .ritual-page__textarea {
   width: 100%;
   min-height: 196rpx;
   padding: 24rpx;
-  border: 2rpx solid var(--color-primary-border-soft);
+  border: 2rpx solid var(--color-primary-light-3);
   border-radius: 24rpx;
-  background:
-    var(--gradient-cyber-sheen-soft),
-    var(--color-cyber-panel);
+  background: var(--scene-panel);
   font-size: 26rpx;
   line-height: 1.8;
-  color: var(--color-text-primary);
+  color: var(--scene-text-1);
   box-sizing: border-box;
-  box-shadow: var(--shadow-cyber-inset);
+  box-shadow: var(--scene-shadow-inset);
 }
 
 .ritual-page__textarea-placeholder {
-  color: var(--color-text-placeholder);
+  color: var(--scene-text-3);
 }
 
 .ritual-page__history-template {
@@ -504,12 +459,10 @@ function openResultPage() {
   flex-direction: column;
   gap: 12rpx;
   padding: 22rpx;
-  border: 2rpx solid var(--color-cyber-border);
+  border: 2rpx solid var(--scene-border-1);
   border-radius: 24rpx;
-  background:
-    radial-gradient(circle at top right, var(--color-cyber-violet-soft) 0%, transparent 18%),
-    var(--color-cyber-panel-soft);
-  box-shadow: var(--shadow-cyber-inset);
+  background: var(--scene-panel-soft);
+  box-shadow: var(--scene-shadow-inset);
 }
 
 .ritual-page__history-template-header {
@@ -522,13 +475,13 @@ function openResultPage() {
 .ritual-page__history-template-name {
   font-size: 26rpx;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--scene-text-1);
 }
 
 .ritual-page__history-template-message,
 .ritual-page__history-template-meta {
   font-size: 22rpx;
   line-height: 1.8;
-  color: var(--color-text-secondary);
+  color: var(--scene-text-2);
 }
 </style>

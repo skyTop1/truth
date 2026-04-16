@@ -2,7 +2,7 @@ import type { RitualActionTemplate } from '@/types/ritual'
 
 export const RITUAL_ARCHIVE_STORAGE_KEY = 'truth.cyber-ritual.archive'
 export const RITUAL_ARCHIVE_VERSION = 2
-export const DEFAULT_ANCESTOR_NAME = '太爷爷 A-108'
+export const DEFAULT_ANCESTOR_NAME = '太爷爷'
 
 export const ritualActionTemplates: RitualActionTemplate[] = [
   {

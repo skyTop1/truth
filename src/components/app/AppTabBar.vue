@@ -53,22 +53,11 @@ function handleSwitch(item: TabBarItem) {
   display: grid;
   gap: 8rpx;
   padding: 12rpx 12rpx calc(env(safe-area-inset-bottom) + 12rpx);
-  background: var(--gradient-cyber-panel, var(--color-bg-card));
-  border: 2rpx solid var(--color-border);
+  background: var(--color-bg-5);
+  border: 2rpx solid var(--color-border-2);
   border-radius: 32rpx;
-  box-shadow: var(--shadow-cyber-float, var(--shadow-card));
+  box-shadow: var(--shadow2-down);
   backdrop-filter: blur(24px);
-}
-
-.app-tab-bar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background:
-    radial-gradient(circle at 50% 0%, var(--color-cyber-cyan-trace) 0%, transparent 38%),
-    linear-gradient(180deg, var(--color-cyber-white-ghost) 0%, transparent 100%);
-  pointer-events: none;
 }
 
 .app-tab-bar__item {
@@ -77,18 +66,20 @@ function handleSwitch(item: TabBarItem) {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  justify-self: stretch;
+  width: 100%;
+  min-width: 0;
   gap: 8rpx;
   min-height: 84rpx;
-  padding: 8rpx 0 4rpx;
-  border-radius: 20rpx;
+  padding: 10rpx 12rpx 8rpx;
+  border-radius: 24rpx;
   border: 2rpx solid transparent;
   background: transparent;
-  color: var(--color-text-secondary);
+  color: var(--color-text-3);
   opacity: 0.92;
   transition:
-    color var(--duration-cyber-base, 260ms) ease,
-    text-shadow var(--duration-cyber-base, 260ms) ease,
-    opacity var(--duration-cyber-fast, 180ms) ease;
+    color var(--transition-duration-3, 0.3s) var(--transition-timing-function-standard, ease),
+    opacity var(--transition-duration-2, 0.2s) var(--transition-timing-function-standard, ease);
 }
 
 .app-tab-bar__item::after {
@@ -96,19 +87,12 @@ function handleSwitch(item: TabBarItem) {
 }
 
 .app-tab-bar__item--active {
-  color: var(--color-primary);
+  color: var(--primary-6);
   opacity: 1;
-  text-shadow: 0 0 22rpx var(--color-cyber-violet-soft-strong);
 }
 
 .app-tab-bar__icon {
   color: currentColor;
-  transition:
-    filter var(--duration-cyber-base, 260ms) ease;
-}
-
-.app-tab-bar__item--active .app-tab-bar__icon {
-  filter: drop-shadow(0 0 16rpx var(--color-cyber-cyan-glow));
 }
 
 .app-tab-bar__label {

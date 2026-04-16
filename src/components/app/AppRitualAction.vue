@@ -63,10 +63,10 @@ function handleClick() {
   gap: 18rpx;
   width: 100%;
   padding: 24rpx;
-  border: 2rpx solid var(--color-cyber-border);
+  border: 2rpx solid var(--scene-border-1);
   border-radius: 28rpx;
-  background: var(--color-cyber-surface-solid);
-  box-shadow: var(--shadow-cyber-glow);
+  background: var(--scene-surface-solid);
+  box-shadow: var(--scene-shadow-glow);
   text-align: left;
   transition:
     transform 220ms ease,
@@ -82,41 +82,58 @@ function handleClick() {
 .app-ritual-action::before {
   content: '';
   position: absolute;
-  inset: -40% auto -40% -30%;
-  width: 160rpx;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--color-cyber-cyan-trace) 18%,
-    var(--color-cyber-gold-fog) 50%,
-    var(--color-cyber-cyan-faint) 82%,
-    transparent 100%
-  );
+  top: -40%;
+  bottom: -40%;
+  left: 0;
+  width: 100%;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--scene-accent-glow) 18%,
+      var(--scene-warning-glow) 50%,
+      var(--scene-accent-light) 82%,
+      transparent 100%
+    );
   opacity: 0;
   pointer-events: none;
-  transform: translateX(-220rpx) rotate(16deg);
+  transform: translateX(-100%) rotate(16deg);
+  transition: opacity 660ms ease, transform 660ms ease;
 }
+
 
 .app-ritual-action:active {
   transform: scale(0.985);
 }
 
 .app-ritual-action--active {
-  border-color: var(--color-cyber-gold-border);
+  border-color: var(--scene-warning-border);
   background:
-    linear-gradient(180deg, var(--color-cyber-violet-soft) 0%, var(--color-cyber-surface-solid) 60%),
-    var(--color-cyber-surface-solid);
+    linear-gradient(180deg, var(--scene-primary-glow) 0%, var(--scene-surface-solid) 60%),
+    var(--scene-surface-solid);
   box-shadow:
-    0 0 0 2rpx var(--color-cyber-gold-border),
-    0 26rpx 60rpx var(--color-cyber-violet-shadow-strong),
-    0 0 64rpx var(--color-cyber-gold-shadow);
+    0 0 0 2rpx var(--scene-warning-outline),
+    0 26rpx 60rpx var(--scene-primary-shadow-strong),
+    0 0 64rpx var(--scene-warning-shadow);
   transform: translateY(-4rpx);
 }
 
 .app-ritual-action--active::before {
   opacity: 1;
-  transform: translateX(180rpx) rotate(16deg);
+  transform: translateX(100%) rotate(16deg);
 }
+
+.app-ritual-action__icon::after {
+  content: '';
+  position: absolute;
+  inset: -10rpx;
+  border-radius: 30rpx;
+  background: radial-gradient(circle, var(--scene-warning-glow) 0%, transparent 72%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
 
 .app-ritual-action__icon {
   position: relative;
@@ -126,8 +143,8 @@ function handleClick() {
   width: 88rpx;
   height: 88rpx;
   border-radius: 24rpx;
-  color: var(--color-cyber-cyan);
-  background: var(--color-cyber-cyan-faint);
+  color: var(--link-6);
+  background: var(--color-link-light-1);
   flex-shrink: 0;
   transition:
     transform 220ms ease,
@@ -136,28 +153,20 @@ function handleClick() {
     box-shadow 220ms ease;
 }
 
-.app-ritual-action__icon::after {
-  content: '';
-  position: absolute;
-  inset: -10rpx;
-  border-radius: 30rpx;
-  background: radial-gradient(circle, var(--color-cyber-gold-fog) 0%, transparent 72%);
-  opacity: 0;
-  pointer-events: none;
-}
 
 .app-ritual-action--active .app-ritual-action__icon {
-  color: var(--color-cyber-gold);
-  background: var(--color-cyber-gold-faint);
+  color: var(--warning-6);
+  background: var(--scene-warning-light);
   box-shadow:
-    0 0 0 2rpx var(--color-cyber-gold-faint-strong),
-    0 0 42rpx var(--color-cyber-gold-glow);
+    0 0 0 2rpx var(--scene-warning-outline),
+    0 0 42rpx var(--scene-warning-glow);
   transform: scale(1.06);
 }
 
 .app-ritual-action--active .app-ritual-action__icon::after {
   opacity: 1;
 }
+
 
 .app-ritual-action__content {
   display: flex;
@@ -180,33 +189,33 @@ function handleClick() {
 }
 
 .app-ritual-action__badge {
-  color: var(--color-cyber-cyan);
+  color: var(--link-6);
 }
 
 .app-ritual-action__energy {
-  color: var(--color-cyber-gold);
+  color: var(--warning-6);
 }
 
 .app-ritual-action__title {
   font-size: 30rpx;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--scene-text-1);
   transition: color 220ms ease, text-shadow 220ms ease;
 }
 
 .app-ritual-action__description {
   font-size: 24rpx;
   line-height: 1.7;
-  color: var(--color-text-secondary);
+  color: var(--scene-text-2);
   transition: color 220ms ease;
 }
 
 .app-ritual-action--active .app-ritual-action__badge,
 .app-ritual-action--active .app-ritual-action__title {
-  text-shadow: 0 0 20rpx var(--color-cyber-gold-glow);
+  text-shadow: 0 0 20rpx var(--scene-warning-glow);
 }
 
 .app-ritual-action--active .app-ritual-action__description {
-  color: var(--color-text-primary);
+  color: var(--scene-text-1);
 }
 </style>

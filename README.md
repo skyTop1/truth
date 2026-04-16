@@ -46,14 +46,15 @@
 当前运行时主题已经接入四套预设，并统一走同一条变量链路：
 
 - `黛蓝灰`：浅色主方案
-- `夜航蓝`：深色赛博主方案
+- `夜祠墨`：深色赛博主方案
 - `夜祠金`：无渐变暗场候选
 - `碑青灰`：无渐变亮场候选
 
 主题实现约束：
 
-- 页面与组件统一消费 `--color-* / --gradient-cyber-* / --shadow-* / --overlay-*`
-- 无渐变主题不会另起变量命名，只是把现有 `--gradient-cyber-*` 键降级为纯色或透明层
+- 主题根层统一使用 `--primary-* / --link-* / --success-* / --warning-* / --danger-* / --color-text-* / --color-bg-* / --color-border-*`
+- 页面与组件直接消费 Arco 官方 token；赛博页面额外直接消费 `--scene-*` 扩展层，不再保留兼容桥或 `$ui-*` 中转
+- scene 扩展层继续服务赛博页面，但不再承担全局结构 token 的职责
 - 当前主题预设会持久化到本地缓存 `truth-theme-preset`
 - 旧的 `truth-theme-mode` 会在启动时自动兼容迁移
 
@@ -75,7 +76,7 @@ pnpm run dev:mp-weixin
 
 - 当前优先验证平台仍然是 `H5 + 微信小程序`
 - `src/manifest.json` 里的 `mp-weixin.appid` 仍为空，当前适合原型开发，不是可直接提审状态
-- `pnpm run build:app-plus` 脚本已保留，但本轮文档补充不把 `App` 端视为已验证平台
+- `pnpm run build:app-plus` 当前已可生成 `App` 调试资源，但本项目仍不把 `App` 端视为已验证平台
 
 最小校验：
 
@@ -83,6 +84,33 @@ pnpm run dev:mp-weixin
 pnpm run lint
 pnpm run type-check
 ```
+
+## App 打包准备
+
+当前 `App` 端现状：
+
+- `pnpm run build:app-plus` 已可成功生成调试资源
+- 构建产物用于 HBuilderX 导入调试，当前命令行输出的导入目录为 `dist/build/app`
+- `src/manifest.json` 已补 `app-plus.optimization.subPackages = true`，与当前分包结构保持一致
+- `src/manifest.json` 已补 `app-plus.distribute.android / ios` 字段骨架，但发布所需真实值仍需手工填写
+
+在 HBuilderX 云打包或正式发版前，至少还要补齐这些真实配置：
+
+- Android：`packagename`、签名 `keystore`、签名 `password`、签名别名 `aliasname`
+- iOS：`appid`、`mobileprovision`、`p12`、证书密码
+- 应用图标、启动图、应用名称与商店展示信息
+
+当前建议的 App 真机回归重点：
+
+- 海报生成后预览、保存到相册
+- 首页 / 仪式页 / 结果页 / 祖域页主链路
+- 剪贴板导出与导入恢复
+- 自定义导航、底部吸附和安全区表现
+- 输入框与 `textarea` 的键盘顶起行为
+
+更细的 App 回归与发版准备，可直接参考：
+
+- `docs/赛博祭祖-App打包与真机回归清单.md`
 
 ## 本地数据与备份
 
@@ -133,6 +161,7 @@ src
 ├─ types
 ├─ utils
 ├─ App.vue
+├─ env.d.ts
 ├─ main.ts
 ├─ pages.json
 ├─ manifest.json
@@ -143,6 +172,7 @@ src
 
 - 赛博祭祖主链路已经可跑通
 - 海报生成、预览与保存已接通
+- 海报 Canvas 渲染已改为三遍策略（测量 -> 面板 -> 内容），面板高度和底部区域动态计算，不再使用固定坐标
 - 祭祖记录会默认写入本地祖域仓
 - 本地缓存版本迁移与损坏兜底已接通
 - 结果页已经覆盖海报缓存恢复、缓存失效、生成失败、保存权限被拒等状态
@@ -153,6 +183,7 @@ src
 
 - `docs/Truth-项目目录、模块接口与软件流程说明.md`：源码目录、store、路由、缓存结构和主链路说明
 - `docs/赛博祭祖-本地优先回归检查清单.md`：围绕本地写入、海报、备份恢复和主题切换的最小回归基线
+- `docs/赛博祭祖-App打包与真机回归清单.md`：`app-plus` 构建、HBuilderX 导入、发版前真实配置与真机回归清单
 - `docs/uniapp-技术选型与UI框架分析.md`：uni-app、Vue 3、Pinia、uni-ui 的选型背景
 - `docs/方案A-项目重规划与主题色体系.md`：主题 token、历史方案和当前无渐变候选补充
 - `docs/赛博祭祖-本地优先产品缺口清单.md`：当前仍待收口的产品、文档和工程缺口

@@ -1,34 +1,36 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref } from 'vue'
+import { onShareAppMessage } from '@dcloudio/uni-app'
 
 import AppButton from '@/components/app/AppButton.vue'
 import AppIcon from '@/components/app/AppIcon.vue'
 import AppNavBar from '@/components/app/AppNavBar.vue'
 import AppSharePoster from '@/components/app/AppSharePoster.vue'
 import AppTag from '@/components/app/AppTag.vue'
+import { useTheme } from '@/composables/useTheme'
 import {
   cyberStatusCopy,
   formatRitualBadgeLabel,
   getLocalRecordStatusMeta,
   getPosterStatusMeta
 } from '@/constants/status'
+import { themePosterPalettes } from '@/constants/theme'
 import { useRitualStore } from '@/stores'
 import { createLocalId } from '@/utils/local-id'
-import { getCurrentPageOptions, registerShareAppMessage } from '@/utils/uni-page'
+import { getCurrentPageOptions } from '@/utils/uni-page'
 
-import type { PosterStatus } from '@/constants/status'
+import type { PosterStatus } from '@/types/status'
 
 defineOptions({
   name: 'CyberRitualResultPage'
 })
 
-type PosterCanvasContext = ReturnType<typeof uni.createCanvasContext>
-
 const posterCanvasId = 'ritualPosterCanvas'
 const posterWidth = 960
-const posterHeight = 1560
+const posterHeight = 1580
 
 const ritualStore = useRitualStore()
+const { themePreset } = useTheme()
 
 let posterSecondaryActionText = '保存海报到相册'
 // #ifdef H5
@@ -38,14 +40,14 @@ posterSecondaryActionText = '预览分享图'
 const ritualId = ref(createLocalId('ritual'))
 const title = ref('今日赛博祭祖已完成')
 const badge = ref('祖域接入员')
-const ancestorName = ref('太爷爷 A-108')
-const incenseValue = ref('108')
-const signalValue = ref('87%')
-const ritualCount = ref('3')
+const ancestorName = ref('太爷爷')
+const incenseValue = ref('0')
+const signalValue = ref('0%')
+const ritualCount = ref('0')
 const message = ref('你向祖域上传了一次心意，祖先信号节点已被点亮。')
 const actionKeys = ref<string[]>([])
 const isGeneratingPoster = ref(false)
-const posterImageUrl = ref('')
+const posterImageUrl = ref<string>('')
 const posterStatus = ref<PosterStatus>('idle')
 const posterStatusDetail = ref('等待写入本次赛博战报。')
 const hasRestoredLocalRecord = ref(false)
@@ -77,7 +79,7 @@ const posterPrimaryActionText = computed(() => {
     return '海报生成中...'
   }
 
-  if (posterImageUrl.value.length > 0) {
+  if (posterImageUrl.value?.length > 0) {
     return '重新生成分享图'
   }
 
@@ -94,6 +96,10 @@ const posterStatusVariant = computed(() => {
 
 const localRecordStatusMeta = computed(() => {
   return getLocalRecordStatusMeta(hasRestoredLocalRecord.value)
+})
+
+const activePosterPalette = computed(() => {
+  return themePosterPalettes[themePreset.value]
 })
 
 const posterPlaceholderTitle = computed(() => {
@@ -145,7 +151,7 @@ const posterHint = computed(() => {
     return '这张海报是从本地祖域仓恢复出来的缓存。要是预览失败，通常说明临时文件已经过期，需要重新生成一次。'
   }
 
-  if (posterStatus.value === 'ready' && posterImageUrl.value.length > 0) {
+  if (posterStatus.value === 'ready' && posterImageUrl.value?.length > 0) {
     return '海报已生成，现在这页既能直接截图，也能打开单图预览或保存到相册。'
   }
 
@@ -217,14 +223,14 @@ onMounted(() => {
   restoreRecordFromArchive()
   persistRitualRecord()
 
-  if (posterImageUrl.value.length > 0) {
+  if (posterImageUrl.value?.length > 0) {
     return
   }
 
   void generatePoster(true)
 })
 
-registerShareAppMessage(() => {
+onShareAppMessage(() => {
   return {
     title: shareTitle.value,
     path: sharePath.value,
@@ -275,7 +281,13 @@ async function generatePoster(silent = false) {
   try {
     await nextTick()
 
-    posterImageUrl.value = await renderPosterImage()
+    const renderedUrl = await renderPosterImage()
+
+    if (!renderedUrl) {
+      throw new Error('祖域图像引擎未能输出图片，请稍后重试。')
+    }
+
+    posterImageUrl.value = renderedUrl ?? ''
     ritualStore.upsertPosterRecord({
       id: `poster-${ritualId.value}`,
       ritualRecordId: ritualId.value,
@@ -312,11 +324,11 @@ async function previewOrSavePoster() {
     return
   }
 
-  if (posterImageUrl.value.length === 0) {
+  if (!posterImageUrl.value?.length) {
     await generatePoster(true)
   }
 
-  if (posterImageUrl.value.length === 0) {
+  if (!posterImageUrl.value?.length) {
     return
   }
 
@@ -411,8 +423,8 @@ function restoreRecordFromArchive() {
   const localPoster = ritualStore.findPosterRecordByRitualId(ritualId.value)
   const cachedImageUrl = localPoster?.imageUrl ?? localRecord?.posterImageUrl ?? ''
 
-  if (cachedImageUrl.length > 0) {
-    posterImageUrl.value = cachedImageUrl
+  if (cachedImageUrl?.length > 0) {
+    posterImageUrl.value = cachedImageUrl ?? ''
     posterStatus.value = 'restored'
     posterStatusDetail.value = '已从本地祖域仓恢复海报缓存。'
     return
@@ -463,28 +475,80 @@ function isFileUnavailableError(error: unknown) {
   return message.includes('file') || message.includes('path') || message.includes('no such')
 }
 
-function renderPosterImage() {
-  const context = uni.createCanvasContext(posterCanvasId)
+function getPosterCanvasNode(): Promise<HTMLCanvasElement> {
+  // #ifdef H5
+  return new Promise<HTMLCanvasElement>((resolve) => {
+    // H5 使用离屏 canvas，不依赖 DOM 中的 <canvas> 元素
+    // 避免屏幕外 canvas 不渲染导致 toDataURL 导出空白
+    const canvas = document.createElement('canvas')
+    canvas.width = posterWidth
+    canvas.height = posterHeight
+    resolve(canvas)
+  })
+  // #endif
+
+  // #ifndef H5
+  return new Promise<HTMLCanvasElement>((resolve, reject) => {
+    // @dcloudio/types 尚未完整定义 Canvas 2D node 查询，此处需类型桥接
+    const query = uni.createSelectorQuery() as unknown as {
+      select: (selector: string) => { node: () => { exec: (callback: (res: { node: HTMLCanvasElement }[]) => void) => void } }
+    }
+    query
+      .select(`#${posterCanvasId}`)
+      .node()
+      .exec((res) => {
+        if (!res || !res[0] || !res[0].node) {
+          reject(new Error('Failed to get poster canvas node'))
+          return
+        }
+        const canvas = res[0].node
+        canvas.width = posterWidth
+        canvas.height = posterHeight
+        resolve(canvas)
+      })
+  })
+  // #endif
+}
+
+async function renderPosterImage(): Promise<string> {
+  const canvas = await getPosterCanvasNode()
+  const context = canvas.getContext('2d')
+
+  if (!context) {
+    throw new Error('Failed to get 2d context from poster canvas')
+  }
 
   drawPoster(context)
 
+  // #ifdef H5
+  return canvas.toDataURL('image/png')
+  // #endif
+
+  // #ifndef H5
   return new Promise<string>((resolve, reject) => {
-    context.draw(false, () => {
-      uni.canvasToTempFilePath({
-        canvasId: posterCanvasId,
-        fileType: 'png',
-        quality: 1,
-        destWidth: posterWidth,
-        destHeight: posterHeight,
-        success: (result) => {
-          resolve(result.tempFilePath)
-        },
-        fail: (error) => {
-          reject(error instanceof Error ? error : new Error('Failed to export ritual poster'))
+    const options: Record<string, unknown> = {
+      canvas,
+      fileType: 'png',
+      quality: 1,
+      destWidth: posterWidth,
+      destHeight: posterHeight,
+      success: (result: { tempFilePath: string }) => {
+        const tempFilePath = result?.tempFilePath
+
+        if (typeof tempFilePath === 'string' && tempFilePath.length > 0) {
+          resolve(tempFilePath)
+          return
         }
-      })
-    })
+
+        reject(new Error('Canvas export returned empty path'))
+      },
+      fail: (error: unknown) => {
+        reject(error instanceof Error ? error : new Error('Failed to export ritual poster'))
+      }
+    }
+    void uni.canvasToTempFilePath(options as unknown as UniApp.CanvasToTempFilePathOptions)
   })
+  // #endif
 }
 
 function parseMetricValue(value: string) {
@@ -493,147 +557,184 @@ function parseMetricValue(value: string) {
   return Number.isFinite(normalizedValue) ? normalizedValue : 0
 }
 
-function drawPoster(context: PosterCanvasContext) {
-  const backgroundGradient = context.createLinearGradient(0, 0, 0, posterHeight)
-  backgroundGradient.addColorStop(0, '#150d39')
-  backgroundGradient.addColorStop(0.55, '#0a122b')
-  backgroundGradient.addColorStop(1, '#050811')
+function drawPoster(context: CanvasRenderingContext2D) {
+  const palette = activePosterPalette.value
 
-  context.clearRect(0, 0, posterWidth, posterHeight)
-  context.setFillStyle(backgroundGradient)
-  context.fillRect(0, 0, posterWidth, posterHeight)
+  /* ── Pass 1: measure dynamic Y positions (no drawing) ── */
+  context.fillStyle = palette.title
+  context.font = '74px sans-serif'
+  const titleLines = wrapText(context, title.value, 772, 2)
+  const titleBottom = 420 + (titleLines.length - 1) * 88
 
-  drawGlowOrb(context, 776, 192, 126, '#7a61ff', 'rgba(122, 97, 255, 0.54)')
-  drawGlowOrb(context, 172, 1260, 92, '#1be1ff', 'rgba(27, 225, 255, 0.32)')
-
-  const panelGradient = context.createLinearGradient(60, 72, 900, 1488)
-  panelGradient.addColorStop(0, 'rgba(18, 28, 61, 0.98)')
-  panelGradient.addColorStop(0.7, 'rgba(9, 16, 36, 0.98)')
-  panelGradient.addColorStop(1, 'rgba(5, 8, 17, 0.98)')
-
-  fillRoundedRect(context, 60, 72, 840, 1416, 54, panelGradient)
-  strokeRoundedRect(context, 60, 72, 840, 1416, 54, 'rgba(114, 140, 214, 0.38)', 2)
-
-  context.setFillStyle('#1be1ff')
-  context.setFontSize(32)
-  context.fillText(cyberStatusCopy.posterEyebrow, 94, 138)
-
-  drawBadgePill(context, displayBadge.value, 868, 104)
-
-  const badgeGradient = context.createLinearGradient(94, 182, 250, 334)
-  badgeGradient.addColorStop(0, 'rgba(122, 97, 255, 0.98)')
-  badgeGradient.addColorStop(1, 'rgba(48, 239, 255, 0.18)')
-  fillRoundedRect(context, 94, 182, 152, 152, 38, badgeGradient)
-  context.setShadow(0, 0, 34, 'rgba(255, 211, 110, 0.44)')
-  context.setFillStyle('#ffd36e')
-  context.setFontSize(80)
-  context.setTextAlign('center')
-  context.fillText('祖', 170, 282)
-  context.setShadow(0, 0, 0, 'rgba(0, 0, 0, 0)')
-  context.setTextAlign('left')
-
-  context.setFillStyle('#f6f7ff')
-  context.setFontSize(74)
-  const titleBottom = drawWrappedText(context, title.value, 94, 420, 772, 88, 2)
-
-  context.setFillStyle('#ffe3a4')
-  context.setFontSize(38)
-  context.fillText(truncateText(context, ancestorName.value, 772), 94, titleBottom + 70)
-
-  context.setFillStyle('#b6bedf')
-  context.setFontSize(34)
-  const messageBottom = drawWrappedText(context, message.value, 94, titleBottom + 146, 772, 54, 3)
-
-  fillRoundedRect(context, 94, messageBottom + 60, 772, 94, 30, 'rgba(48, 239, 255, 0.08)')
-  strokeRoundedRect(context, 94, messageBottom + 60, 772, 94, 30, 'rgba(48, 239, 255, 0.22)', 2)
-  context.setFillStyle('#1be1ff')
-  context.setFontSize(28)
-  context.fillText('祖域传输通道已稳定，建议立即截图或单图转发。', 126, messageBottom + 117)
+  context.fillStyle = palette.bodyText
+  context.font = '34px sans-serif'
+  const messageLines = wrapText(context, message.value, 772, 3)
+  const messageBottom = titleBottom + 146 + (messageLines.length - 1) * 54
 
   const metricTop = messageBottom + 202
-  drawMetricCard(context, 94, metricTop, 240, 214, incenseValue.value, '香火值', '#ffd36e')
-  drawMetricCard(context, 360, metricTop, 240, 214, signalValue.value, '信号强度', '#1be1ff')
-  drawMetricCard(context, 626, metricTop, 240, 214, ritualCount.value, '仪式动作', '#9f8cff')
+  const memoTop = metricTop + 258
 
-  fillRoundedRect(context, 94, metricTop + 258, 772, 272, 38, 'rgba(255, 255, 255, 0.04)')
-  strokeRoundedRect(context, 94, metricTop + 258, 772, 272, 38, 'rgba(255, 255, 255, 0.08)', 2)
-  context.setFillStyle('#7f89b3')
-  context.setFontSize(26)
-  context.fillText(cyberStatusCopy.posterMemoEyebrow, 126, metricTop + 318)
-  context.setFillStyle('#f6f7ff')
-  context.setFontSize(46)
-  drawWrappedText(context, '不是传统纪念页，是一张够离谱、够亮、够想转发的赛博战报。', 126, metricTop + 388, 708, 62, 3)
+  context.fillStyle = palette.title
+  context.font = '46px sans-serif'
+  const memoLines = wrapText(context, '不是传统纪念页，是一张够离谱、够亮、够想转发的赛博战报。', 708, 3)
+  const memoTextBottom = memoTop + 130 + (memoLines.length - 1) * 62
 
-  context.setStrokeStyle('rgba(48, 239, 255, 0.18)')
-  context.setLineWidth(2)
+  const footerTop = Math.max(memoTop + 272 + 60, memoTextBottom + 60)
+  const panelBottom = footerTop + 164
+  const panelHeight = panelBottom - 72
+
+  /* ── Pass 2: draw background & panel ── */
+  const backgroundGradient = context.createLinearGradient(0, 0, 0, posterHeight)
+  backgroundGradient.addColorStop(0, palette.backgroundTop)
+  backgroundGradient.addColorStop(0.55, palette.backgroundMid)
+  backgroundGradient.addColorStop(1, palette.backgroundBottom)
+
+  context.clearRect(0, 0, posterWidth, posterHeight)
+  context.fillStyle = backgroundGradient
+  context.fillRect(0, 0, posterWidth, posterHeight)
+
+  drawGlowOrb(context, 776, 192, 126, palette.glowPrimaryFill, palette.glowPrimaryShadow)
+  drawGlowOrb(context, 172, Math.min(1260, panelBottom - 92), 92, palette.glowSecondaryFill, palette.glowSecondaryShadow)
+
+  const panelGradient = context.createLinearGradient(60, 72, 900, panelBottom)
+  panelGradient.addColorStop(0, palette.panelTop)
+  panelGradient.addColorStop(0.7, palette.panelBottom)
+  panelGradient.addColorStop(1, palette.panelBottom)
+
+  fillRoundedRect(context, 60, 72, 840, panelHeight, 54, panelGradient)
+  strokeRoundedRect(context, 60, 72, 840, panelHeight, 54, palette.panelBorder, 2)
+
+  /* ── Pass 3: draw content inside panel ── */
+  context.fillStyle = palette.eyebrow
+  context.font = '32px sans-serif'
+  context.fillText(cyberStatusCopy.posterEyebrow, 94, 138)
+
+  drawBadgePill(context, displayBadge.value, 868, 104, palette)
+
+  const badgeGradient = context.createLinearGradient(94, 182, 250, 334)
+  badgeGradient.addColorStop(0, palette.glyphStart)
+  badgeGradient.addColorStop(1, palette.glyphEnd)
+  fillRoundedRect(context, 94, 182, 152, 152, 38, badgeGradient)
+  context.shadowBlur = 34
+  context.shadowColor = palette.glowPrimaryShadow
+  context.fillStyle = palette.glyphText
+  context.font = '80px sans-serif'
+  context.textAlign = 'center'
+  context.fillText('祖', 170, 282)
+  context.shadowBlur = 0
+  context.shadowColor = 'rgba(0, 0, 0, 0)'
+  context.textAlign = 'left'
+
+  context.fillStyle = palette.title
+  context.font = '74px sans-serif'
+  drawWrappedText(context, title.value, 94, 420, 772, 88, 2)
+
+  context.fillStyle = palette.ancestor
+  context.font = '38px sans-serif'
+  context.fillText(truncateText(context, ancestorName.value, 772), 94, titleBottom + 70)
+
+  context.fillStyle = palette.bodyText
+  context.font = '34px sans-serif'
+  drawWrappedText(context, message.value, 94, titleBottom + 146, 772, 54, 3)
+
+  fillRoundedRect(context, 94, messageBottom + 60, 772, 94, 30, palette.hintBackground)
+  strokeRoundedRect(context, 94, messageBottom + 60, 772, 94, 30, palette.hintBorder, 2)
+  context.fillStyle = palette.hintText
+  context.font = '28px sans-serif'
+  context.fillText('祖域传输通道已稳定，建议立即截图或单图转发。', 126, messageBottom + 117)
+
+  drawMetricCard(context, 94, metricTop, 240, 214, incenseValue.value, '香火值', palette.metricPrimary, palette)
+  drawMetricCard(context, 360, metricTop, 240, 214, signalValue.value, '信号强度', palette.metricSecondary, palette)
+  drawMetricCard(context, 626, metricTop, 240, 214, ritualCount.value, '仪式动作', palette.metricTertiary, palette)
+
+  fillRoundedRect(context, 94, memoTop, 772, 272, 38, palette.metricCardBackground)
+  strokeRoundedRect(context, 94, memoTop, 772, 272, 38, palette.metricCardBorder, 2)
+  context.fillStyle = palette.memoEyebrow
+  context.font = '26px sans-serif'
+  context.fillText(cyberStatusCopy.posterMemoEyebrow, 126, memoTop + 60)
+  context.fillStyle = palette.title
+  context.font = '46px sans-serif'
+  drawWrappedText(context, '不是传统纪念页，是一张够离谱、够亮、够想转发的赛博战报。', 126, memoTop + 130, 708, 62, 3)
+
+  context.strokeStyle = palette.divider
+  context.lineWidth = 2
   context.beginPath()
-  context.moveTo(94, 1384)
-  context.lineTo(866, 1384)
+  context.moveTo(94, footerTop)
+  context.lineTo(866, footerTop)
   context.stroke()
 
-  context.setFillStyle('#b6bedf')
-  context.setFontSize(30)
-  context.fillText(cyberStatusCopy.posterSignature, 94, 1448)
-  context.setFillStyle('#1be1ff')
-  context.setFontSize(28)
-  context.fillText('截图、转发、再来一次', 94, 1494)
+  context.fillStyle = palette.signature
+  context.font = '30px sans-serif'
+  context.fillText(cyberStatusCopy.posterSignature, 94, footerTop + 64)
+  context.fillStyle = palette.action
+  context.font = '28px sans-serif'
+  context.fillText('截图、转发、再来一次', 94, footerTop + 110)
 }
 
 function drawGlowOrb(
-  context: PosterCanvasContext,
+  context: CanvasRenderingContext2D,
   x: number,
   y: number,
   radius: number,
   fillColor: string,
   shadowColor: string
 ) {
-  context.setShadow(0, 0, radius * 0.72, shadowColor)
-  context.setFillStyle(fillColor)
+  context.shadowBlur = radius * 0.72
+  context.shadowColor = shadowColor
+  context.fillStyle = fillColor
   context.beginPath()
   context.arc(x, y, radius, 0, Math.PI * 2)
   context.fill()
-  context.setShadow(0, 0, 0, 'rgba(0, 0, 0, 0)')
+  context.shadowBlur = 0
+  context.shadowColor = 'rgba(0, 0, 0, 0)'
 }
 
-function drawBadgePill(context: PosterCanvasContext, label: string, right: number, top: number) {
-  context.setFontSize(26)
+function drawBadgePill(
+  context: CanvasRenderingContext2D,
+  label: string,
+  right: number,
+  top: number,
+  palette: (typeof themePosterPalettes)[keyof typeof themePosterPalettes]
+) {
+  context.font = '26px sans-serif'
   const text = truncateText(context, label, 230)
   const width = Math.max(162, context.measureText(text).width + 42)
   const x = right - width
 
-  fillRoundedRect(context, x, top, width, 54, 999, 'rgba(255, 211, 110, 0.14)')
-  strokeRoundedRect(context, x, top, width, 54, 999, 'rgba(255, 211, 110, 0.22)', 2)
-  context.setFillStyle('#ffd36e')
+  fillRoundedRect(context, x, top, width, 54, 999, palette.badgeBackground)
+  strokeRoundedRect(context, x, top, width, 54, 999, palette.badgeBorder, 2)
+  context.fillStyle = palette.badgeText
   context.fillText(text, x + 22, top + 35)
 }
 
 function drawMetricCard(
-  context: PosterCanvasContext,
+  context: CanvasRenderingContext2D,
   x: number,
   y: number,
   width: number,
   height: number,
   value: string,
   label: string,
-  accentColor: string
+  accentColor: string,
+  palette: (typeof themePosterPalettes)[keyof typeof themePosterPalettes]
 ) {
-  fillRoundedRect(context, x, y, width, height, 30, 'rgba(255, 255, 255, 0.04)')
-  strokeRoundedRect(context, x, y, width, height, 30, 'rgba(255, 255, 255, 0.08)', 2)
+  fillRoundedRect(context, x, y, width, height, 30, palette.metricCardBackground)
+  strokeRoundedRect(context, x, y, width, height, 30, palette.metricCardBorder, 2)
 
-  context.setFillStyle(accentColor)
-  context.setFontSize(54)
+  context.fillStyle = accentColor
+  context.font = '54px sans-serif'
   context.fillText(value, x + 28, y + 88)
-  context.setFillStyle('#9ca4c8')
-  context.setFontSize(26)
+  context.fillStyle = palette.metricLabel
+  context.font = '26px sans-serif'
   context.fillText(label, x + 28, y + 140)
-  context.setFillStyle('rgba(255, 255, 255, 0.08)')
+  context.fillStyle = palette.metricCardBorder
   context.fillRect(x + 28, y + 168, width - 56, 10)
-  context.setFillStyle(accentColor)
+  context.fillStyle = accentColor
   context.fillRect(x + 28, y + 168, Math.max(64, width - 138), 10)
 }
 
 function drawWrappedText(
-  context: PosterCanvasContext,
+  context: CanvasRenderingContext2D,
   text: string,
   x: number,
   y: number,
@@ -650,7 +751,7 @@ function drawWrappedText(
   return y + (lines.length - 1) * lineHeight
 }
 
-function wrapText(context: PosterCanvasContext, text: string, maxWidth: number, maxLines: number) {
+function wrapText(context: CanvasRenderingContext2D, text: string, maxWidth: number, maxLines: number) {
   const characters = [...text]
   const lines: string[] = []
   let currentLine = ''
@@ -680,7 +781,7 @@ function wrapText(context: PosterCanvasContext, text: string, maxWidth: number, 
   return visibleLines
 }
 
-function truncateText(context: PosterCanvasContext, text: string, maxWidth: number) {
+function truncateText(context: CanvasRenderingContext2D, text: string, maxWidth: number) {
   if (context.measureText(text).width <= maxWidth) {
     return text
   }
@@ -688,7 +789,7 @@ function truncateText(context: PosterCanvasContext, text: string, maxWidth: numb
   return trimTextToWidth(context, text, maxWidth)
 }
 
-function trimTextToWidth(context: PosterCanvasContext, text: string, maxWidth: number) {
+function trimTextToWidth(context: CanvasRenderingContext2D, text: string, maxWidth: number) {
   const ellipsis = '...'
 
   if (context.measureText(text).width <= maxWidth) {
@@ -705,21 +806,21 @@ function trimTextToWidth(context: PosterCanvasContext, text: string, maxWidth: n
 }
 
 function fillRoundedRect(
-  context: PosterCanvasContext,
+  context: CanvasRenderingContext2D,
   x: number,
   y: number,
   width: number,
   height: number,
   radius: number,
-  fillStyle: string | UniApp.CanvasGradient
+  fillStyle: string | CanvasGradient
 ) {
   roundedRectPath(context, x, y, width, height, radius)
-  context.setFillStyle(fillStyle)
+  context.fillStyle = fillStyle
   context.fill()
 }
 
 function strokeRoundedRect(
-  context: PosterCanvasContext,
+  context: CanvasRenderingContext2D,
   x: number,
   y: number,
   width: number,
@@ -729,13 +830,13 @@ function strokeRoundedRect(
   lineWidth: number
 ) {
   roundedRectPath(context, x, y, width, height, radius)
-  context.setLineWidth(lineWidth)
-  context.setStrokeStyle(strokeStyle)
+  context.lineWidth = lineWidth
+  context.strokeStyle = strokeStyle
   context.stroke()
 }
 
 function roundedRectPath(
-  context: PosterCanvasContext,
+  context: CanvasRenderingContext2D,
   x: number,
   y: number,
   width: number,
@@ -759,7 +860,7 @@ function roundedRectPath(
 </script>
 
 <template>
-  <app-theme-page class="ritual-result-page ritual-result-page--cyber">
+  <app-theme-page class="ritual-result-page">
     <app-nav-bar title="结果页" subtitle="现在就截图，传播这个概念">
       <template #left>
         <view class="ritual-result-page__back" @click="goBack">
@@ -832,9 +933,9 @@ function roundedRectPath(
     </view>
 
     <canvas
-      :style="{ width: `${posterWidth}px`, height: `${posterHeight}px` }"
-      canvas-id="ritualPosterCanvas"
+      type="2d"
       id="ritualPosterCanvas"
+      :style="{ width: `${posterWidth}px`, height: `${posterHeight}px` }"
       class="ritual-result-page__poster-canvas"
     />
   </app-theme-page>
@@ -844,56 +945,32 @@ function roundedRectPath(
 .ritual-result-page {
   position: relative;
   min-height: 100vh;
-  background: var(--color-bg-page);
+  background: var(--scene-space);
   overflow: hidden;
 }
 
-.ritual-result-page--cyber {
-  --color-bg-page: var(--color-cyber-space);
-  --color-bg-card: var(--color-cyber-surface);
-  --color-bg-muted: var(--color-cyber-surface-soft);
-  --color-primary: var(--color-cyber-violet-strong);
-  --color-primary-pressed: var(--color-cyber-violet);
-  --color-primary-soft: var(--color-cyber-violet-soft);
-  --color-accent: var(--color-cyber-cyan);
-  --color-accent-soft: var(--color-cyber-cyan-faint);
-  --color-text-primary: var(--color-cyber-text-primary);
-  --color-text-secondary: var(--color-cyber-text-secondary);
-  --color-text-tertiary: var(--color-cyber-text-muted);
-  --color-text-disabled: var(--color-cyber-text-disabled);
-  --color-border: var(--color-cyber-border);
-  --color-border-strong: var(--color-cyber-border-strong);
-  --color-primary-border-soft: var(--color-cyber-violet-soft-strong);
-  --color-overlay: var(--color-cyber-overlay);
-  --shadow-card: var(--shadow-cyber-panel);
-  --shadow-pop: var(--shadow-cyber-float);
-}
-
-.ritual-result-page--cyber::before {
+.ritual-result-page::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 0%, var(--color-cyber-violet-soft-strong) 0%, transparent 28%),
-    radial-gradient(circle at 84% 24%, var(--color-cyber-cyan-faint) 0%, transparent 18%),
-    radial-gradient(circle at 10% 82%, var(--color-cyber-hot-soft) 0%, transparent 18%),
-    var(--gradient-cyber-page);
+    radial-gradient(circle at top right, var(--color-primary-light-2) 0, transparent 34%),
+    linear-gradient(180deg, var(--color-primary-light-1) 0, transparent 260rpx);
   pointer-events: none;
 }
 
-.ritual-result-page--cyber::after {
+.ritual-result-page::after {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: var(--overlay-cyber-grid);
-  background-size: 48rpx 48rpx;
-  opacity: 0.1;
+  background: radial-gradient(circle at left 18%, var(--color-link-light-1) 0, transparent 26%);
+  opacity: 0.72;
   pointer-events: none;
 }
 
-.ritual-result-page--cyber :deep(.app-nav-bar) {
-  background: var(--gradient-cyber-nav);
-  border-color: var(--color-cyber-border);
+:deep(.app-nav-bar) {
+  background: var(--scene-nav);
+  border-color: var(--scene-border-1);
 }
 
 .ritual-result-page__back {
@@ -902,10 +979,10 @@ function roundedRectPath(
   justify-content: center;
   width: 84rpx;
   height: 84rpx;
-  border: 2rpx solid var(--color-cyber-cyan-faint);
+  border: 2rpx solid var(--color-link-light-3);
   border-radius: 24rpx;
-  background: var(--color-cyber-cyan-trace);
-  color: var(--color-cyber-cyan);
+  background: var(--color-link-light-1);
+  color: var(--link-6);
 }
 
 .ritual-result-page__content {
@@ -926,25 +1003,10 @@ function roundedRectPath(
   flex-direction: column;
   gap: 16rpx;
   padding: 28rpx;
-  border: 2rpx solid var(--color-cyber-border);
-  border-radius: var(--radius-cyber-panel);
-  background:
-    radial-gradient(circle at top right, var(--color-cyber-cyan-trace) 0%, transparent 18%),
-    var(--gradient-cyber-panel);
-  box-shadow: var(--shadow-card);
-}
-
-.ritual-result-page__hero::before,
-.ritual-result-page__actions::before,
-.ritual-result-page__poster-panel::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 28rpx;
-  right: 28rpx;
-  height: 2rpx;
-  background: var(--gradient-cyber-highlight);
-  pointer-events: none;
+  border: 2rpx solid var(--scene-border-1);
+  border-radius: var(--border-radius-xlarge);
+  background: var(--scene-panel);
+  box-shadow: var(--scene-shadow-panel);
 }
 
 .ritual-result-page__tag-list {
@@ -959,14 +1021,14 @@ function roundedRectPath(
   font-weight: 700;
   line-height: 1.06;
   letter-spacing: 1rpx;
-  color: var(--color-text-primary);
-  text-shadow: 0 0 32rpx var(--color-cyber-violet-shadow);
+  color: var(--scene-text-1);
+  text-shadow: 0 0 32rpx var(--color-primary-light-3);
 }
 
 .ritual-result-page__subtitle {
   font-size: 23rpx;
   line-height: 1.82;
-  color: var(--color-text-secondary);
+  color: var(--scene-text-2);
 }
 
 .ritual-result-page__poster-panel {
@@ -987,21 +1049,19 @@ function roundedRectPath(
 }
 
 .ritual-result-page__poster-label {
-  color: var(--color-cyber-cyan);
+  color: var(--link-6);
 }
 
 .ritual-result-page__poster-state {
-  color: var(--color-cyber-gold);
+  color: var(--primary-6);
 }
 
 .ritual-result-page__poster-preview {
   overflow: hidden;
   border-radius: 30rpx;
-  border: 2rpx solid var(--color-cyber-white-soft);
-  background:
-    radial-gradient(circle at top, var(--color-cyber-violet-soft-strong) 0%, transparent 48%),
-    var(--gradient-cyber-nav-strong);
-  box-shadow: var(--shadow-cyber-inset);
+  border: 2rpx solid var(--color-primary-light-2);
+  background: var(--scene-nav-soft);
+  box-shadow: var(--scene-shadow-inset);
 }
 
 .ritual-result-page__poster-image {
@@ -1027,22 +1087,22 @@ function roundedRectPath(
   width: 108rpx;
   height: 108rpx;
   border-radius: 30rpx;
-  background: var(--color-cyber-cyan-faint);
-  color: var(--color-cyber-cyan);
-  box-shadow: 0 0 60rpx var(--color-cyber-cyan-glow);
+  background: var(--color-link-light-1);
+  color: var(--link-6);
+  box-shadow: 0 0 60rpx var(--color-link-light-2);
 }
 
 .ritual-result-page__poster-placeholder-title {
   font-size: 32rpx;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--scene-text-1);
 }
 
 .ritual-result-page__poster-placeholder-copy,
 .ritual-result-page__poster-copy {
   font-size: 23rpx;
   line-height: 1.82;
-  color: var(--color-text-secondary);
+  color: var(--scene-text-2);
 }
 
 .ritual-result-page__actions {

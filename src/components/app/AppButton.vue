@@ -59,11 +59,11 @@ function handleClick() {
   font-weight: 600;
   letter-spacing: 1rpx;
   transition:
-    transform var(--duration-cyber-fast, 180ms) ease,
-    box-shadow var(--duration-cyber-base, 260ms) ease,
-    border-color var(--duration-cyber-base, 260ms) ease,
-    background var(--duration-cyber-base, 260ms) ease,
-    color var(--duration-cyber-base, 260ms) ease;
+    transform var(--transition-duration-2, 0.2s) var(--transition-timing-function-standard, ease),
+    box-shadow var(--transition-duration-3, 0.3s) var(--transition-timing-function-standard, ease),
+    border-color var(--transition-duration-3, 0.3s) var(--transition-timing-function-standard, ease),
+    background-color var(--transition-duration-3, 0.3s) var(--transition-timing-function-standard, ease),
+    color var(--transition-duration-3, 0.3s) var(--transition-timing-function-standard, ease);
 }
 
 .app-button::after {
@@ -71,13 +71,7 @@ function handleClick() {
 }
 
 .app-button::before {
-  content: '';
-  position: absolute;
-  inset: 2rpx;
-  border-radius: 22rpx;
-  background: var(--gradient-cyber-sheen);
-  opacity: 0.68;
-  pointer-events: none;
+  display: none;
 }
 
 .app-button--block {
@@ -85,41 +79,45 @@ function handleClick() {
 }
 
 .app-button--primary {
-  color: var(--color-cyber-text-primary);
-  background: var(--gradient-cyber-button, var(--color-primary));
-  box-shadow: var(--shadow-cyber-button-primary);
+  color: var(--color-bg-5);
+  background: var(--primary-6);
+  border-color: var(--primary-6);
+  box-shadow: 0 14rpx 28rpx var(--color-primary-light-3);
 }
 
 .app-button--primary:active {
   transform: translateY(2rpx);
+  background: var(--primary-7);
+  border-color: var(--primary-7);
 }
 
 .app-button--secondary {
-  color: var(--color-text-primary);
-  background: var(--gradient-cyber-button-secondary, var(--color-bg-card));
-  border-color: var(--color-cyber-panel-line-strong, var(--color-border-strong));
-  box-shadow: var(--shadow-cyber-panel, var(--shadow-card));
+  color: var(--color-text-1);
+  background: var(--color-bg-2);
+  border-color: var(--color-border-2);
+  box-shadow: var(--shadow1-down);
 }
 
 .app-button--text {
   min-width: auto;
   height: 72rpx;
   padding: 0 18rpx;
-  color: var(--color-accent);
+  color: var(--link-6);
   background: transparent;
   box-shadow: none;
 }
 
 .app-button--danger {
-  color: var(--color-cyber-text-primary);
-  background: linear-gradient(135deg, var(--color-cyber-hot, var(--color-danger)) 0%, var(--color-danger) 100%);
-  box-shadow: var(--shadow-cyber-button-danger);
+  color: var(--color-bg-5);
+  background: var(--danger-6);
+  border-color: var(--danger-6);
+  box-shadow: 0 14rpx 28rpx var(--color-danger-light-3);
 }
 
 .app-button--disabled {
-  color: var(--color-text-disabled);
-  background: var(--color-cyber-white-soft);
-  border-color: transparent;
+  color: var(--color-text-4);
+  background: var(--color-fill-2);
+  border-color: var(--color-border-1);
   box-shadow: none;
 }
 

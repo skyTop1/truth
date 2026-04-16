@@ -17,8 +17,8 @@ const { themeClass } = useTheme()
 <style scoped lang="scss">
 .app-theme-page {
   min-height: 100vh;
-  background: var(--color-bg-page);
-  color: var(--color-text-primary);
+  background: var(--color-bg-1);
+  color: var(--color-text-1);
   transition:
     background-color 220ms ease,
     color 220ms ease;

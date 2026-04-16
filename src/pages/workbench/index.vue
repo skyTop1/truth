@@ -21,7 +21,7 @@ import {
 import { useRitualStore } from '@/stores'
 
 import type { PosterRecord, RitualRecord } from '@/types/ritual'
-import type { BackupImportStatus, StatusTagVariant } from '@/constants/status'
+import type { BackupImportStatus, StatusTagVariant } from '@/types/status'
 
 defineOptions({
   name: 'WorkbenchPage'
@@ -504,7 +504,7 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
 </script>
 
 <template>
-  <app-theme-page class="workbench-page workbench-page--cyber">
+  <app-theme-page class="workbench-page">
     <app-nav-bar title="祖域" subtitle="本机祖域仓 · 仅本地缓存" />
 
     <view class="workbench-page__content">
@@ -517,7 +517,7 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
           <app-tag variant="muted">{{ formatArchiveVersionLabel(ritualStore.archiveVersion) }}</app-tag>
         </view>
         <text class="workbench-page__paragraph">
-          这里不再是假工作台，而是你的本地祖域入口。所有赛博祭祖记录都在这里回看、复用、导出和清空，不需要经过任何云端。
+          这里是你的本地祖域入口。所有赛博祭祖记录都在这里回看、复用、导出和清空，不需要经过任何云端。
         </text>
         <text class="workbench-page__paragraph">{{ ritualStore.archiveHydrationDetail }}</text>
         <view class="workbench-page__meta-list">
@@ -696,61 +696,27 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--color-bg-page);
+  background: var(--color-bg-1);
   overflow: hidden;
 }
 
-.workbench-page--cyber {
-  --color-bg-page: var(--color-cyber-space);
-  --color-bg-card: var(--color-cyber-surface);
-  --color-bg-muted: var(--color-cyber-surface-soft);
-  --color-primary: var(--color-cyber-violet-strong);
-  --color-primary-pressed: var(--color-cyber-violet);
-  --color-primary-soft: var(--color-cyber-violet-soft);
-  --color-accent: var(--color-cyber-cyan);
-  --color-accent-soft: var(--color-cyber-cyan-faint);
-  --color-text-primary: var(--color-cyber-text-primary);
-  --color-text-secondary: var(--color-cyber-text-secondary);
-  --color-text-tertiary: var(--color-cyber-text-muted);
-  --color-text-disabled: var(--color-cyber-text-disabled);
-  --color-border: var(--color-cyber-border);
-  --color-border-strong: var(--color-cyber-border-strong);
-  --color-primary-border-soft: var(--color-cyber-violet-soft-strong);
-  --color-overlay: var(--color-cyber-overlay);
-  --shadow-card: var(--shadow-cyber-panel);
-  --shadow-pop: var(--shadow-cyber-float);
-}
-
-.workbench-page--cyber::before {
+.workbench-page::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 18% 0%, var(--color-cyber-violet-soft-strong) 0%, transparent 28%),
-    radial-gradient(circle at 88% 20%, var(--color-cyber-cyan-faint) 0%, transparent 18%),
-    radial-gradient(circle at 12% 84%, var(--color-cyber-hot-soft) 0%, transparent 18%),
-    var(--gradient-cyber-page);
+    radial-gradient(circle at top right, var(--color-primary-light-2) 0, transparent 32%),
+    linear-gradient(180deg, var(--color-primary-light-1) 0, transparent 220rpx);
   pointer-events: none;
 }
 
-.workbench-page--cyber::after {
+.workbench-page::after {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: var(--overlay-cyber-grid);
-  background-size: 48rpx 48rpx;
-  opacity: 0.1;
+  background: radial-gradient(circle at left 18%, var(--color-link-light-1) 0, transparent 24%);
+  opacity: 0.68;
   pointer-events: none;
-}
-
-.workbench-page--cyber :deep(.app-nav-bar) {
-  background: var(--gradient-cyber-nav);
-  border-color: var(--color-cyber-border);
-}
-
-.workbench-page--cyber :deep(.app-tab-bar) {
-  background: var(--gradient-cyber-nav-strong);
-  border-color: var(--color-cyber-border);
 }
 
 .workbench-page__content {
@@ -776,7 +742,7 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
 .workbench-page__paragraph {
   font-size: 23rpx;
   line-height: 1.82;
-  color: var(--color-text-secondary);
+  color: var(--color-text-2);
 }
 
 .workbench-page__meta-list {
@@ -788,7 +754,7 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
 .workbench-page__meta-item {
   font-size: 22rpx;
   line-height: 1.8;
-  color: var(--color-text-secondary);
+  color: var(--color-text-2);
 }
 
 .workbench-page__import-panel {
@@ -802,19 +768,17 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
   min-height: 240rpx;
   padding: 24rpx;
   box-sizing: border-box;
-  border: 2rpx solid var(--color-primary-border-soft);
+  border: 2rpx solid var(--color-primary-light-3);
   border-radius: 24rpx;
-  background:
-    var(--gradient-cyber-sheen-soft),
-    var(--color-cyber-panel);
+  background: var(--color-bg-1);
   font-size: 24rpx;
   line-height: 1.8;
-  color: var(--color-text-primary);
-  box-shadow: var(--shadow-cyber-inset);
+  color: var(--color-text-1);
+  box-shadow: var(--shadow1-down);
 }
 
 .workbench-page__import-placeholder {
-  color: var(--color-text-tertiary);
+  color: var(--color-text-4);
 }
 
 .workbench-page__stats {
@@ -837,11 +801,9 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
   gap: 10rpx;
   padding: 20rpx 18rpx;
   border-radius: 22rpx;
-  background:
-    radial-gradient(circle at top right, var(--color-cyber-cyan-trace) 0%, transparent 18%),
-    var(--color-cyber-panel);
-  border: 2rpx solid var(--color-cyber-panel-line);
-  box-shadow: var(--shadow-cyber-inset);
+  background: var(--color-bg-2);
+  border: 2rpx solid var(--color-border-2);
+  box-shadow: var(--shadow1-down);
 }
 
 .status-matrix__head {
@@ -855,14 +817,14 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
 .status-matrix__focus-title {
   font-size: 26rpx;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-text-1);
 }
 
 .status-matrix__desc,
 .status-matrix__focus-desc {
   font-size: 22rpx;
   line-height: 1.7;
-  color: var(--color-text-secondary);
+  color: var(--color-text-2);
 }
 
 .workbench-page__stat {
@@ -871,25 +833,23 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
   flex-direction: column;
   gap: 8rpx;
   padding: 18rpx;
-  border: 2rpx solid var(--color-cyber-panel-line);
+  border: 2rpx solid var(--color-border-2);
   border-radius: 22rpx;
-  background:
-    var(--gradient-cyber-sheen-soft),
-    var(--color-cyber-panel);
-  box-shadow: var(--shadow-cyber-inset);
+  background: var(--color-bg-2);
+  box-shadow: var(--shadow1-down);
 }
 
 .workbench-page__stat-value {
   font-size: 34rpx;
   font-weight: 700;
-  color: var(--color-cyber-gold);
-  text-shadow: 0 0 22rpx var(--color-cyber-gold-shadow);
+  color: var(--primary-6);
+  text-shadow: 0 0 22rpx var(--color-primary-light-2);
 }
 
 .workbench-page__stat-label {
   font-size: 20rpx;
   letter-spacing: 2rpx;
-  color: var(--color-text-secondary);
+  color: var(--color-text-2);
 }
 
 .ancestor-list,
@@ -910,12 +870,10 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
   flex-direction: column;
   gap: 14rpx;
   padding: 22rpx;
-  border: 2rpx solid var(--color-cyber-panel-line);
+  border: 2rpx solid var(--color-border-2);
   border-radius: 24rpx;
-  background:
-    radial-gradient(circle at top right, var(--color-cyber-violet-soft) 0%, transparent 18%),
-    var(--color-cyber-panel);
-  box-shadow: var(--shadow-cyber-inset);
+  background: var(--color-bg-2);
+  box-shadow: var(--shadow1-down);
 }
 
 .ancestor-item {
@@ -949,7 +907,7 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
   font-size: 28rpx;
   font-weight: 700;
   letter-spacing: 1rpx;
-  color: var(--color-text-primary);
+  color: var(--color-text-1);
 }
 
 .ancestor-item__meta,
@@ -961,7 +919,7 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
 .dialog-list__item {
   font-size: 22rpx;
   line-height: 1.8;
-  color: var(--color-text-secondary);
+  color: var(--color-text-2);
 }
 
 .history-item__topline,
@@ -978,8 +936,8 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
   min-height: 240rpx;
   overflow: hidden;
   border-radius: 20rpx;
-  border: 2rpx solid var(--color-cyber-panel-line);
-  background: var(--color-cyber-panel-strong);
+  border: 2rpx solid var(--color-border-2);
+  background: var(--color-fill-2);
 }
 
 .poster-item__image,
@@ -992,20 +950,20 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-cyber-cyan);
+  color: var(--link-6);
 }
 
 .poster-item__badge,
 .history-item__badge {
   font-size: 22rpx;
   letter-spacing: 2rpx;
-  color: var(--color-cyber-cyan);
+  color: var(--link-6);
 }
 
 .history-item__metric {
   padding: 8rpx 14rpx;
-  border: 2rpx solid var(--color-cyber-violet-soft);
-  border-radius: var(--radius-cyber-chip);
-  background: var(--color-cyber-panel);
+  border: 2rpx solid var(--color-primary-light-2);
+  border-radius: var(--border-radius-circle);
+  background: var(--color-primary-light-1);
 }
 </style>

@@ -25,8 +25,6 @@ const displayBadge = computed(() => {
 
 <template>
   <view class="app-share-poster">
-    <view class="app-share-poster__glow app-share-poster__glow--violet" />
-    <view class="app-share-poster__glow app-share-poster__glow--cyan" />
 
     <view class="app-share-poster__topline">
       <text class="app-share-poster__eyebrow">{{ cyberStatusCopy.posterEyebrow }}</text>
@@ -68,36 +66,10 @@ const displayBadge = computed(() => {
   flex-direction: column;
   gap: 24rpx;
   padding: 34rpx;
-  border: 2rpx solid var(--color-cyber-border-strong);
-  border-radius: var(--radius-cyber-hero, 42rpx);
-  background:
-    radial-gradient(circle at top, var(--color-cyber-violet-soft-strong) 0%, transparent 42%),
-    radial-gradient(circle at 92% 14%, var(--color-cyber-cyan-faint) 0%, transparent 20%),
-    var(--gradient-cyber-panel-strong);
-  box-shadow: var(--shadow-cyber-float);
-}
-
-.app-share-poster__glow {
-  position: absolute;
-  border-radius: 999rpx;
-  filter: blur(54rpx);
-  opacity: 0.48;
-}
-
-.app-share-poster__glow--violet {
-  top: 32rpx;
-  right: 24rpx;
-  width: 160rpx;
-  height: 160rpx;
-  background: var(--color-cyber-violet);
-}
-
-.app-share-poster__glow--cyan {
-  left: 32rpx;
-  bottom: 40rpx;
-  width: 120rpx;
-  height: 120rpx;
-  background: var(--color-cyber-cyan);
+  border: 2rpx solid var(--color-primary-light-2);
+  border-radius: var(--border-radius-hero);
+  background: var(--scene-panel-strong);
+  box-shadow: var(--scene-shadow-float);
 }
 
 .app-share-poster__topline,
@@ -122,15 +94,15 @@ const displayBadge = computed(() => {
 }
 
 .app-share-poster__eyebrow {
-  color: var(--color-cyber-cyan);
+  color: var(--link-6);
 }
 
 .app-share-poster__badge {
   padding: 10rpx 16rpx;
-  border: 2rpx solid var(--color-cyber-gold-border);
-  border-radius: var(--radius-cyber-chip, 999rpx);
-  background: var(--color-cyber-gold-faint);
-  color: var(--color-cyber-gold);
+  border: 2rpx solid var(--color-warning-light-3);
+  border-radius: var(--border-radius-circle);
+  background: var(--color-warning-light-1);
+  color: var(--warning-6);
 }
 
 .app-share-poster__glyph {
@@ -140,13 +112,11 @@ const displayBadge = computed(() => {
   width: 110rpx;
   height: 110rpx;
   border-radius: 30rpx;
-  color: var(--color-cyber-gold);
-  background:
-    linear-gradient(180deg, var(--color-cyber-violet-soft) 0%, var(--color-cyber-cyan-faint) 100%),
-    var(--color-cyber-surface-solid);
+  color: var(--warning-6);
+  background: var(--scene-surface-solid);
   box-shadow:
-    0 0 0 2rpx var(--color-cyber-cyan-faint),
-    0 0 56rpx var(--color-cyber-gold-faint-strong);
+    0 0 0 2rpx var(--color-link-light-1),
+    0 0 56rpx var(--color-warning-light-2);
 }
 
 .app-share-poster__body {
@@ -159,19 +129,19 @@ const displayBadge = computed(() => {
   font-size: 42rpx;
   font-weight: 700;
   line-height: 1.08;
-  color: var(--color-text-primary);
+  color: var(--scene-text-1);
 }
 
 .app-share-poster__ancestor {
   font-size: 28rpx;
   font-weight: 600;
-  color: var(--color-cyber-gold-soft);
+  color: var(--warning-6);
 }
 
 .app-share-poster__message {
   font-size: 24rpx;
   line-height: 1.72;
-  color: var(--color-text-secondary);
+  color: var(--scene-text-2);
 }
 
 .app-share-poster__metrics {
@@ -186,19 +156,19 @@ const displayBadge = computed(() => {
   gap: 6rpx;
   padding: 18rpx 16rpx;
   border-radius: 22rpx;
-  background: var(--color-cyber-panel);
-  border: 2rpx solid var(--color-cyber-violet-soft);
-  box-shadow: var(--shadow-cyber-inset);
+  background: var(--scene-panel);
+  border: 2rpx solid var(--color-primary-light-2);
+  box-shadow: var(--scene-shadow-inset);
 }
 
 .app-share-poster__metric-value {
   font-size: 28rpx;
   font-weight: 700;
-  color: var(--color-cyber-gold);
+  color: var(--primary-6);
 }
 
 .app-share-poster__metric-label {
   font-size: 20rpx;
-  color: var(--color-text-tertiary);
+  color: var(--scene-text-3);
 }
 </style>

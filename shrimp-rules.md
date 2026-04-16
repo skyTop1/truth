@@ -85,13 +85,13 @@
 
 ## 框架与样式使用规范
 
-- 页面和组件内禁止新增裸十六进制色值；统一走 `var(--color-*)` 或 SCSS token 体系。
+- 页面和组件内禁止新增裸十六进制色值；统一走 `var(--color-*)` 或运行时 SCSS 别名体系。
 - 页面和组件内禁止直接写字符图标；统一使用 `src/components/app/AppIcon.vue`。
 - 调整主题时，按以下顺序联动检查：
-  - `src/styles/tokens.scss`
-  - `src/styles/semantic.scss`
   - `src/styles/theme-light.scss`
   - `src/styles/theme-dark.scss`
+  - `src/styles/theme-solid.scss`
+  - `src/styles/runtime-theme.scss`
   - `src/uni.scss`
   - `src/constants/theme.ts`
 - `src/constants/theme.ts` 是主题展示数据源；只改样式文件不改这里，会让主题预览页失真。

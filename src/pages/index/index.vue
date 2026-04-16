@@ -36,7 +36,7 @@ const signalMetrics = computed(() => {
   return [
     {
       label: '本机香火值',
-      value: ritualStore.totalIncenseValue > 0 ? `${ritualStore.totalIncenseValue}` : '000',
+      value: ritualStore.totalIncenseValue > 0 ? `${ritualStore.totalIncenseValue}` : '--',
       description: '只统计当前设备上的赛博祭祖记录，不连云。'
     },
     {
@@ -81,11 +81,11 @@ const altarSubtitle = computed(() => {
 })
 
 const altarSignalValue = computed(() => {
-  return ritualStore.latestRecord ? `${ritualStore.latestRecord.signalValue}%` : '61%'
+  return ritualStore.latestRecord ? `${ritualStore.latestRecord.signalValue}%` : '--'
 })
 
 const altarIncenseValue = computed(() => {
-  return ritualStore.latestRecord ? `${ritualStore.latestRecord.incenseValue}` : '072'
+  return ritualStore.latestRecord ? `${ritualStore.latestRecord.incenseValue}` : '--'
 })
 
 const altarRitualValue = computed(() => {
@@ -231,7 +231,7 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
 </script>
 
 <template>
-  <app-theme-page class="page-shell page-shell--cyber">
+  <app-theme-page class="page-shell">
     <app-nav-bar title="赛博祭祖" subtitle="祖域接入中 · 热梗原型">
       <view class="page-shell__nav-tag">{{ cyberStatusCopy.hotTag }}</view>
     </app-nav-bar>
@@ -362,52 +362,26 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--color-bg-page);
+  background: var(--scene-space);
   overflow: hidden;
 }
 
-.page-shell--cyber {
-  --color-bg-page: var(--color-cyber-space);
-  --color-bg-card: var(--color-cyber-surface);
-  --color-bg-muted: var(--color-cyber-surface-soft);
-  --color-primary: var(--color-cyber-violet-strong);
-  --color-primary-pressed: var(--color-cyber-violet);
-  --color-primary-soft: var(--color-cyber-violet-soft);
-  --color-accent: var(--color-cyber-cyan);
-  --color-accent-soft: var(--color-cyber-cyan-faint);
-  --color-warning: var(--color-cyber-gold);
-  --color-text-primary: var(--color-cyber-text-primary);
-  --color-text-secondary: var(--color-cyber-text-secondary);
-  --color-text-tertiary: var(--color-cyber-text-muted);
-  --color-text-placeholder: var(--color-cyber-text-muted);
-  --color-text-disabled: var(--color-cyber-text-disabled);
-  --color-border: var(--color-cyber-border);
-  --color-border-strong: var(--color-cyber-border-strong);
-  --color-primary-border-soft: var(--color-cyber-violet-soft-strong);
-  --color-overlay: var(--color-cyber-overlay);
-  --shadow-card: var(--shadow-cyber-panel);
-  --shadow-pop: var(--shadow-cyber-float);
-}
-
-.page-shell--cyber::before {
+.page-shell::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at top, var(--color-cyber-violet-soft-strong) 0%, transparent 34%),
-    radial-gradient(circle at 82% 16%, var(--color-cyber-cyan-faint) 0%, transparent 18%),
-    radial-gradient(circle at 20% 72%, var(--color-cyber-hot-soft) 0%, transparent 20%),
-    var(--gradient-cyber-page);
+    radial-gradient(circle at top right, var(--color-primary-light-2) 0, transparent 34%),
+    linear-gradient(180deg, var(--color-primary-light-1) 0, transparent 280rpx);
   pointer-events: none;
 }
 
-.page-shell--cyber::after {
+.page-shell::after {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: var(--overlay-cyber-grid);
-  background-size: 48rpx 48rpx;
-  opacity: 0.12;
+  background: radial-gradient(circle at left 18%, var(--color-link-light-1) 0, transparent 26%);
+  opacity: 0.72;
   pointer-events: none;
 }
 
@@ -423,24 +397,24 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
 
 .page-shell__nav-tag {
   padding: 10rpx 18rpx;
-  border: 2rpx solid var(--color-cyber-gold-border);
-  border-radius: var(--radius-cyber-chip);
-  background: var(--color-cyber-gold-faint);
+  border: 2rpx solid var(--color-warning-light-3);
+  border-radius: var(--border-radius-circle);
+  background: var(--color-warning-light-1);
   font-size: 18rpx;
   font-weight: 700;
   letter-spacing: 3rpx;
-  color: var(--color-cyber-gold);
-  box-shadow: 0 0 26rpx var(--color-cyber-gold-shadow);
+  color: var(--warning-6);
+  box-shadow: 0 0 26rpx var(--color-warning-light-2);
 }
 
 :deep(.app-nav-bar) {
-  background: var(--gradient-cyber-nav);
-  border-color: var(--color-cyber-border);
+  background: var(--scene-nav);
+  border-color: var(--scene-border-1);
 }
 
 :deep(.app-tab-bar) {
-  background: var(--gradient-cyber-nav-strong);
-  border-color: var(--color-cyber-border);
+  background: var(--scene-nav-soft);
+  border-color: var(--scene-border-1);
 }
 
 .hero-copy {
@@ -450,27 +424,12 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
   flex-direction: column;
   gap: 18rpx;
   padding: 32rpx;
-  border: 2rpx solid var(--color-cyber-border-strong);
-  border-radius: var(--radius-cyber-hero);
-  background:
-    radial-gradient(circle at 92% 12%, var(--color-cyber-cyan-faint) 0%, transparent 20%),
-    radial-gradient(circle at 0% 0%, var(--color-cyber-violet-soft-strong) 0%, transparent 24%),
-    var(--gradient-cyber-panel-strong);
-  box-shadow: var(--shadow-cyber-float);
+  border: 2rpx solid var(--color-primary-light-2);
+  border-radius: var(--border-radius-hero);
+  background: var(--scene-panel-strong);
+  box-shadow: var(--scene-shadow-float);
 }
 
-.hero-copy::after {
-  content: '';
-  position: absolute;
-  top: 22rpx;
-  right: 24rpx;
-  width: 148rpx;
-  height: 56rpx;
-  border-top: 2rpx solid var(--color-cyber-panel-line-strong);
-  border-right: 2rpx solid var(--color-cyber-panel-line-strong);
-  border-radius: 0 18rpx 0 0;
-  opacity: 0.8;
-}
 
 .hero-copy__title {
   max-width: 600rpx;
@@ -478,15 +437,15 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
   font-weight: 700;
   line-height: 1.04;
   letter-spacing: 1rpx;
-  color: var(--color-text-primary);
-  text-shadow: 0 0 34rpx var(--color-cyber-violet-shadow);
+  color: var(--scene-text-1);
+  text-shadow: 0 0 34rpx var(--color-primary-light-3);
 }
 
 .hero-copy__subtitle {
   max-width: 650rpx;
   font-size: 24rpx;
   line-height: 1.8;
-  color: var(--color-text-secondary);
+  color: var(--scene-text-2);
 }
 
 .tag-list {
@@ -503,10 +462,10 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
 
 .page-content > .action-row {
   padding: 12rpx;
-  border: 2rpx solid var(--color-cyber-panel-line);
-  border-radius: var(--radius-cyber-panel);
-  background: var(--color-cyber-surface-panel);
-  box-shadow: var(--shadow-cyber-inset);
+  border: 2rpx solid var(--color-primary-light-2);
+  border-radius: var(--border-radius-xlarge);
+  background: var(--scene-surface-panel);
+  box-shadow: var(--scene-shadow-inset);
 }
 
 .privacy-panel {
@@ -516,40 +475,24 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
   flex-direction: column;
   gap: 18rpx;
   padding: 28rpx;
-  border: 2rpx solid var(--color-border);
-  border-radius: var(--radius-cyber-panel);
-  background:
-    radial-gradient(circle at top right, var(--color-cyber-cyan-trace) 0%, transparent 24%),
-    var(--gradient-cyber-panel);
-  box-shadow: var(--shadow-card);
-}
-
-.privacy-panel::before,
-.journey-panel::before,
-.feed-panel::before,
-.ritual-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 28rpx;
-  right: 28rpx;
-  height: 2rpx;
-  background: var(--gradient-cyber-highlight);
-  pointer-events: none;
+  border: 2rpx solid var(--scene-border-1);
+  border-radius: var(--border-radius-xlarge);
+  background: var(--scene-panel);
+  box-shadow: var(--scene-shadow-panel);
 }
 
 .privacy-panel__title {
   font-size: 32rpx;
   font-weight: 700;
   letter-spacing: 1rpx;
-  color: var(--color-text-primary);
+  color: var(--scene-text-1);
 }
 
 .privacy-panel__desc,
 .privacy-panel__label {
   font-size: 22rpx;
   line-height: 1.8;
-  color: var(--color-text-secondary);
+  color: var(--scene-text-2);
 }
 
 .privacy-panel__grid {
@@ -566,16 +509,16 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
   min-height: 132rpx;
   padding: 18rpx;
   border-radius: 22rpx;
-  border: 2rpx solid var(--color-cyber-violet-soft);
-  background: var(--color-cyber-panel);
-  box-shadow: var(--shadow-cyber-inset);
+  border: 2rpx solid var(--color-primary-light-2);
+  background: var(--scene-panel);
+  box-shadow: var(--scene-shadow-inset);
 }
 
 .privacy-panel__value {
   font-size: 24rpx;
   font-weight: 600;
   line-height: 1.7;
-  color: var(--color-text-primary);
+  color: var(--scene-text-1);
 }
 
 .journey-panel {
@@ -585,19 +528,17 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
   flex-direction: column;
   gap: 18rpx;
   padding: 28rpx;
-  border: 2rpx solid var(--color-border);
-  border-radius: var(--radius-cyber-panel);
-  background:
-    radial-gradient(circle at 10% 18%, var(--color-cyber-hot-soft) 0%, transparent 18%),
-    var(--gradient-cyber-panel);
-  box-shadow: var(--shadow-card);
+  border: 2rpx solid var(--scene-border-1);
+  border-radius: var(--border-radius-xlarge);
+  background: var(--scene-panel-soft);
+  box-shadow: var(--scene-shadow-panel);
 }
 
 .journey-panel__desc,
 .journey-panel__item-desc {
   font-size: 22rpx;
   line-height: 1.8;
-  color: var(--color-text-secondary);
+  color: var(--scene-text-2);
 }
 
 .journey-panel__list {
@@ -612,9 +553,9 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
   gap: 10rpx;
   padding: 18rpx;
   border-radius: 22rpx;
-  border: 2rpx solid var(--color-cyber-panel-line);
-  background: var(--color-cyber-panel-soft);
-  box-shadow: var(--shadow-cyber-inset);
+  border: 2rpx solid var(--scene-line-2);
+  background: var(--scene-panel-soft);
+  box-shadow: var(--scene-shadow-inset);
 }
 
 .journey-panel__item-head {
@@ -627,7 +568,7 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
 .journey-panel__item-title {
   font-size: 26rpx;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--scene-text-1);
 }
 
 .signal-grid,
@@ -649,12 +590,10 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
   flex-direction: column;
   gap: 14rpx;
   padding: 24rpx;
-  border: 2rpx solid var(--color-border);
-  border-radius: var(--radius-cyber-card);
-  background:
-    radial-gradient(circle at top right, var(--color-cyber-violet-soft) 0%, transparent 20%),
-    var(--color-cyber-panel);
-  box-shadow: var(--shadow-card);
+  border: 2rpx solid var(--scene-border-1);
+  border-radius: var(--border-radius-large);
+  background: var(--scene-panel);
+  box-shadow: var(--scene-shadow-panel);
 }
 
 .signal-card__label,
@@ -663,15 +602,15 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
   font-size: 19rpx;
   letter-spacing: 3rpx;
   text-transform: uppercase;
-  color: var(--color-cyber-cyan);
+  color: var(--link-6);
 }
 
 .signal-card__value {
   font-size: 38rpx;
   font-weight: 700;
   line-height: 1.1;
-  color: var(--color-cyber-gold);
-  text-shadow: 0 0 22rpx var(--color-cyber-gold-shadow);
+  color: var(--primary-6);
+  text-shadow: 0 0 22rpx var(--color-primary-light-2);
 }
 
 .signal-card__desc,
@@ -679,7 +618,7 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
 .feed-item__text {
   font-size: 22rpx;
   line-height: 1.8;
-  color: var(--color-text-secondary);
+  color: var(--scene-text-2);
 }
 
 .ritual-section,
@@ -692,12 +631,10 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
 
 .ritual-section {
   padding: 28rpx;
-  border: 2rpx solid var(--color-border);
-  border-radius: var(--radius-cyber-panel);
-  background:
-    radial-gradient(circle at 0% 0%, var(--color-cyber-cyan-trace) 0%, transparent 18%),
-    var(--gradient-cyber-panel);
-  box-shadow: var(--shadow-card);
+  border: 2rpx solid var(--scene-border-1);
+  border-radius: var(--border-radius-xlarge);
+  background: var(--scene-panel);
+  box-shadow: var(--scene-shadow-panel);
 }
 
 .section-heading {
@@ -710,7 +647,7 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
 .ritual-card__title {
   font-size: 34rpx;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--scene-text-1);
 }
 
 .ritual-grid {
@@ -728,7 +665,7 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
   align-items: flex-start;
   gap: 12rpx;
   padding-bottom: 16rpx;
-  border-bottom: 2rpx solid var(--color-cyber-panel-line);
+  border-bottom: 2rpx solid var(--scene-line-2);
 }
 
 .feed-item:last-child {
@@ -742,8 +679,8 @@ function formatArchiveTime(value: string, fallbackLabel: string) {
   height: 14rpx;
   margin-top: 12rpx;
   border-radius: 999rpx;
-  background: var(--color-cyber-gold);
-  box-shadow: 0 0 24rpx var(--color-cyber-gold-faint-strong);
+  background: var(--primary-6);
+  box-shadow: 0 0 24rpx var(--color-primary-light-2);
 }
 
 </style>

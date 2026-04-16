@@ -41,10 +41,10 @@ withDefaults(
   justify-content: center;
   gap: 24rpx;
   padding: 56rpx 32rpx;
-  background: var(--gradient-cyber-panel, linear-gradient(180deg, var(--color-bg-card) 0%, var(--color-bg-muted) 100%));
-  border: 2rpx dashed var(--color-cyber-panel-line-strong, var(--color-border-strong));
-  border-radius: var(--radius-cyber-panel, 36rpx);
-  box-shadow: var(--shadow-cyber-panel, var(--shadow-card));
+  background: var(--color-bg-2);
+  border: 2rpx dashed var(--color-border-2);
+  border-radius: var(--border-radius-large, 16rpx);
+  box-shadow: var(--shadow1-down);
   text-align: center;
 }
 
@@ -55,11 +55,8 @@ withDefaults(
   width: 112rpx;
   height: 112rpx;
   border-radius: 32rpx;
-  color: var(--color-accent);
-  background: var(--color-cyber-cyan-faint);
-  box-shadow:
-    0 0 0 2rpx var(--color-cyber-cyan-faint),
-    0 0 42rpx var(--color-cyber-cyan-glow);
+  color: var(--primary-6);
+  background: var(--color-primary-light-1);
 }
 
 .app-empty__content {
@@ -71,14 +68,14 @@ withDefaults(
 .app-empty__title {
   font-size: 30rpx;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-text-1);
 }
 
 .app-empty__description {
   max-width: 520rpx;
   font-size: 24rpx;
   line-height: 1.7;
-  color: var(--color-text-secondary);
+  color: var(--color-text-2);
 }
 
 .app-empty__action {

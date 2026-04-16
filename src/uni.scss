@@ -1,16 +1,14 @@
-@use '@/styles/index.scss' as *;
+$uni-color-primary: var(--primary-6);
+$uni-color-success: var(--success-6);
+$uni-color-warning: var(--warning-6);
+$uni-color-error: var(--danger-6);
+$uni-color-info: var(--link-6);
 
-$uni-color-primary: $color-primary;
-$uni-color-success: $color-success;
-$uni-color-warning: $color-warning;
-$uni-color-error: $color-danger;
-$uni-color-info: $color-info;
+$uni-text-color: var(--color-text-1);
+$uni-text-color-grey: var(--color-text-2);
+$uni-text-color-placeholder: var(--color-text-4);
+$uni-text-color-disable: var(--color-text-4);
 
-$uni-text-color: $color-text-primary;
-$uni-text-color-grey: $color-text-secondary;
-$uni-text-color-placeholder: $color-text-placeholder;
-$uni-text-color-disable: $color-text-disabled;
-
-$uni-bg-color: $color-bg-card;
-$uni-bg-color-grey: $color-bg-page;
-$uni-border-color: $color-border;
+$uni-bg-color: var(--color-bg-2);
+$uni-bg-color-grey: var(--color-bg-1);
+$uni-border-color: var(--color-border-2);

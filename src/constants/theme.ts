@@ -17,94 +17,360 @@ export const cyberThemeHighlights = [
   '家谱星链'
 ]
 
-export const cyberThemeTokenGroups: ThemeTokenGroup[] = [
+export const themeTokenGroups: ThemeTokenGroup[] = [
   {
-    title: '深空底色',
-    description: '首页祭台、祖域空间和分享海报统一用深空色做底，保证第一眼冲击力。',
+    title: 'Arco 核心色阶',
+    description: '核心色直接按 Arco 的 1-10 色阶组织，组件态从正式 token 派生，不再经过额外前缀层。',
     tokens: [
-      { label: '极夜黑', name: 'space-950', value: '#05060A', usage: '极深背景' },
-      { label: '深空黑', name: 'space-900', value: '#0B0E16', usage: '页面底色' },
-      { label: '星舰板', name: 'space-800', value: '#141A27', usage: '卡片背景' },
-      { label: '夜幕层', name: 'space-700', value: '#1E2740', usage: '浮层背景' }
+      { label: '主色 6', name: '--primary-6', value: '#355A76', usage: '主按钮 / 主链接' },
+      { label: '主色 7', name: '--primary-7', value: '#244A6C', usage: '按下态 / 强强调' },
+      { label: '主色浅底', name: '--color-primary-light-1', value: '#E8F9FF', usage: '主色弱背景' },
+      { label: '链接 6', name: '--link-6', value: '#587D76', usage: '次级高亮 / 数据强调' }
     ]
   },
   {
-    title: '霓虹紫',
-    description: '承担主 CTA、仪式光圈和赛博祭台的核心科技感。',
+    title: 'Arco 中性层级',
+    description: '中性色和背景层改为 Arco 正式 token：文字、背景、边框都从 neutral / bg / border 体系取值。',
     tokens: [
-      { label: '紫雾微光', name: 'neon-violet-300', value: '#B88CFF', usage: '弱高亮' },
-      { label: '霓虹主紫', name: 'neon-violet-500', value: '#915EFF', usage: '主科技强调' },
-      { label: '高能紫核', name: 'neon-violet-600', value: '#7B43FF', usage: '主按钮 / 主仪式' },
-      { label: '压深紫电', name: 'neon-violet-700', value: '#622EE2', usage: '按下态 / 深层能量感' }
+      { label: '主文字', name: '--color-text-1', value: '#1D2129', usage: '标题 / 主正文' },
+      { label: '次文字', name: '--color-text-2', value: '#4E5969', usage: '说明 / 辅助文案' },
+      { label: '页面背景', name: '--color-bg-1', value: '#F7F8FA', usage: '页面根背景' },
+      { label: '卡片背景', name: '--color-bg-2', value: '#FFFFFF', usage: '卡片 / 面板' },
+      { label: '默认边框', name: '--color-border-2', value: '#E5E6EB', usage: '边框 / 分割线' }
     ]
   },
   {
-    title: '电子蓝',
-    description: '承担扫描线、祖先信号、信息状态和辅助高亮。',
+    title: 'Arco 语义状态',
+    description: '成功、警示、风险统一回到 Arco 语义色阶，并通过 light token 派生弱背景。',
     tokens: [
-      { label: '闪频蓝光', name: 'signal-cyan-300', value: '#7EE7FF', usage: '扫描高亮' },
-      { label: '信号主蓝', name: 'signal-cyan-500', value: '#35CFFF', usage: '信息高亮' },
-      { label: '深层蓝束', name: 'signal-cyan-700', value: '#1496C4', usage: '深辅助色' }
+      { label: '成功 6', name: '--success-6', value: '#4B7F67', usage: '成功 / 完成' },
+      { label: '警示 6', name: '--warning-6', value: '#B58A47', usage: '待处理 / 提醒' },
+      { label: '风险 6', name: '--danger-6', value: '#B85B5B', usage: '删除 / 错误' },
+      { label: '成功浅底', name: '--color-success-light-1', value: '#E8FFF0', usage: '状态弱背景' }
     ]
   },
   {
-    title: '香火金',
-    description: '承担香火值、能量值、称号和结果页高光。',
+    title: 'Scene 扩展',
+    description: '业务页仍保留 scene 扩展层，专门服务赛博祭台场景，但它只挂在 Arco 正式 token 之外。',
     tokens: [
-      { label: '余烬微金', name: 'ember-gold-300', value: '#FFD48A', usage: '轻火光' },
-      { label: '香火主金', name: 'ember-gold-500', value: '#FFB648', usage: '供品高亮' },
-      { label: '灼亮金芯', name: 'ember-gold-700', value: '#D9851E', usage: '强高亮' }
+      { label: '场景主轴', name: '--scene-primary-6', value: '#837680', usage: '首页赛博主轴 / 深层点缀' },
+      { label: '场景辅助', name: '--scene-accent-6', value: '#546A6F', usage: '辅助信息 / 线框' },
+      { label: '场景高亮', name: '--scene-warning-6', value: '#A88552', usage: '仪式高亮 / 徽标' },
+      { label: '场景面板', name: '--scene-panel', value: 'rgba(255, 252, 247, 0.92)', usage: '赛博面板背景' }
     ]
   }
 ]
 
-export const themeTokenGroups: ThemeTokenGroup[] = [
+export const cyberThemeTokenGroups: ThemeTokenGroup[] = [
   {
-    title: '品牌主色',
-    description: '主按钮、主操作、品牌识别统一使用黛蓝系。',
+    title: 'Arco 深色核心',
+    description: '深色主题同样直接使用 Arco 正式 token 命名，弱背景走 dark light token，不再保留旧前缀中间层。',
     tokens: [
-      { label: '晨雾浅蓝', name: 'brand-50', value: '#F2F6F9', usage: '轻提示背景' },
-      { label: '黛蓝弱底', name: 'brand-100', value: '#E2EAF0', usage: '选中弱背景' },
-      { label: '黛蓝辅色', name: 'brand-300', value: '#9FB4C4', usage: '图表辅色' },
-      { label: '品牌基蓝', name: 'brand-500', value: '#4D6F89', usage: '品牌基础值' },
-      { label: '品牌主蓝', name: 'brand-600', value: '#355A76', usage: '主按钮 / 主链接' },
-      { label: '压深黛蓝', name: 'brand-700', value: '#2B4A62', usage: '按下态 / 强调态' }
+      { label: '主色 6', name: '--primary-6', value: '#C3A15F', usage: '主 CTA / 主链接' },
+      { label: '主色 7', name: '--primary-7', value: '#A57F3C', usage: '按下态 / 强强调' },
+      { label: '链接 6', name: '--link-6', value: '#758B93', usage: '信息高亮 / 辅助强调' },
+      { label: '主色浅底', name: '--color-primary-light-1', value: 'rgba(195, 161, 95, 0.2)', usage: '深色弱背景' }
     ]
   },
   {
-    title: '辅助强调色',
-    description: '灰青色只在局部提气，不参与主操作竞争。',
+    title: 'Arco 深色中性',
+    description: '深色层级统一回到 Arco 的 bg / text / border 结构层，业务色不再承担页面骨架。',
     tokens: [
-      { label: '雾青浅底', name: 'accent-50', value: '#F2F7F6', usage: '辅助浅底' },
-      { label: '雾青标签', name: 'accent-100', value: '#E1ECEA', usage: '标签底色' },
-      { label: '灰青辅色', name: 'accent-300', value: '#99BBB5', usage: '图表辅助' },
-      { label: '数据青光', name: 'accent-500', value: '#587D76', usage: '数据高亮' },
-      { label: '深层灰青', name: 'accent-600', value: '#466861', usage: '深强调' }
+      { label: '主文字', name: '--color-text-1', value: 'rgba(255, 255, 255, 0.9)', usage: '主标题 / 正文' },
+      { label: '次文字', name: '--color-text-2', value: 'rgba(255, 255, 255, 0.7)', usage: '说明 / 次级文案' },
+      { label: '页面背景', name: '--color-bg-1', value: '#17171A', usage: '页面根背景' },
+      { label: '卡片背景', name: '--color-bg-2', value: '#232324', usage: '卡片 / 容器' },
+      { label: '默认边框', name: '--color-border-2', value: 'rgba(255, 255, 255, 0.12)', usage: '边框 / 分割线' }
     ]
   },
   {
-    title: '界面中性色',
-    description: '页面层级、正文可读性和边框秩序感都交给中性色完成。',
+    title: 'Arco 深色语义',
+    description: '功能状态和亮点色拆开，状态色回到 Arco 语义 token，弱背景走 alpha light token。',
     tokens: [
-      { label: '纯白底', name: 'gray-0', value: '#FFFFFF', usage: '卡片背景' },
-      { label: '雾白页', name: 'gray-50', value: '#F5F7F8', usage: '页面背景' },
-      { label: '轻分割灰', name: 'gray-200', value: '#DEE4E8', usage: '弱边框 / 分割线' },
-      { label: '次级文案灰', name: 'gray-500', value: '#73808C', usage: '次级文案' },
-      { label: '正文深灰', name: 'gray-700', value: '#414C59', usage: '正文' },
-      { label: '标题墨灰', name: 'gray-900', value: '#1E2833', usage: '主标题' }
+      { label: '成功 6', name: '--success-6', value: '#708A73', usage: '完成 / 成功' },
+      { label: '警示 6', name: '--warning-6', value: '#C3A15F', usage: '待处理 / 提醒' },
+      { label: '风险 6', name: '--danger-6', value: '#B98179', usage: '删除 / 错误' },
+      { label: '成功浅底', name: '--color-success-light-1', value: 'rgba(112, 138, 115, 0.2)', usage: '状态弱背景' }
     ]
   },
   {
-    title: '状态语义色',
-    description: '状态色只表达结果，不用于装饰。',
+    title: 'Scene 扩展',
+    description: '赛博场景色独立在 scene 层，继续服务夜祠页面，但不再直接扮演全局 token。',
     tokens: [
-      { label: '完成绿', name: 'success', value: '#4B7F67', usage: '成功 / 完成' },
-      { label: '警示金', name: 'warning', value: '#B58A47', usage: '警告 / 待处理' },
-      { label: '风险红', name: 'danger', value: '#B85B5B', usage: '错误 / 删除' },
-      { label: '信息蓝', name: 'info', value: '#567596', usage: '说明 / 通知' }
+      { label: '场景烟紫', name: '--scene-primary-6', value: '#7C6C75', usage: '赛博主轴 / 深层点缀' },
+      { label: '场景碑青', name: '--scene-accent-6', value: '#6F8894', usage: '信息高亮 / 线框' },
+      { label: '场景香火金', name: '--scene-warning-6', value: '#C3A15F', usage: '仪式高亮 / 徽标' },
+      { label: '场景面板', name: '--scene-panel', value: 'rgba(25, 28, 32, 0.86)', usage: '赛博面板背景' }
     ]
   }
 ]
+
+const altarGoldTokenGroups: ThemeTokenGroup[] = [
+  {
+    title: 'Arco 核心色阶',
+    description: '纯色候选 A 把金色作为主轴，但根层仍然直接落在 Arco 正式 token 上。',
+    tokens: [
+      { label: '主色 6', name: '--primary-6', value: '#C8A45C', usage: '主操作 / 强 CTA' },
+      { label: '主色 7', name: '--primary-7', value: '#A9813A', usage: '按下态 / 深强调' },
+      { label: '链接 6', name: '--link-6', value: '#6F8894', usage: '辅助信息 / 线框' },
+      { label: '主色浅底', name: '--color-primary-light-1', value: 'rgba(200, 164, 92, 0.2)', usage: '主色弱背景' }
+    ]
+  },
+  {
+    title: 'Arco 中性层级',
+    description: '深色纯色预设依然复用 Arco 的 dark bg / text / border 层，不再让业务色承担结构层。',
+    tokens: [
+      { label: '主文字', name: '--color-text-1', value: 'rgba(255, 255, 255, 0.9)', usage: '标题 / 正文' },
+      { label: '次文字', name: '--color-text-2', value: 'rgba(255, 255, 255, 0.7)', usage: '说明 / 次文案' },
+      { label: '页面背景', name: '--color-bg-1', value: '#17171A', usage: '页面根背景' },
+      { label: '卡片背景', name: '--color-bg-2', value: '#232324', usage: '卡片 / 面板' },
+      { label: '默认边框', name: '--color-border-2', value: 'rgba(255, 255, 255, 0.12)', usage: '边框 / 分割线' }
+    ]
+  },
+  {
+    title: 'Arco 语义状态',
+    description: '状态色与业务高亮拆开，警示仍归 warning，弱背景统一由 Arco light token 派生。',
+    tokens: [
+      { label: '成功 6', name: '--success-6', value: '#6D8A74', usage: '完成 / 成功' },
+      { label: '警示 6', name: '--warning-6', value: '#C8A45C', usage: '提醒 / 待处理' },
+      { label: '风险 6', name: '--danger-6', value: '#C8827D', usage: '删除 / 风险' },
+      { label: '风险浅底', name: '--color-danger-light-1', value: 'rgba(200, 130, 125, 0.2)', usage: '风险弱背景' }
+    ]
+  },
+  {
+    title: 'Scene 扩展',
+    description: 'Scene 层仅保留祭台页面真正需要的业务语义，不再复制整套全局语义变量。',
+    tokens: [
+      { label: '夜祠烟紫', name: '--scene-primary-6', value: '#786871', usage: '弱装饰 / 深层点缀' },
+      { label: '档案青', name: '--scene-accent-6', value: '#6F8894', usage: '辅助信息 / 线框' },
+      { label: '香火金', name: '--scene-warning-6', value: '#C8A45C', usage: '仪式高亮 / 徽标' },
+      { label: '场景面板', name: '--scene-panel', value: 'rgba(25, 28, 32, 0.84)', usage: '组件面层' }
+    ]
+  }
+]
+
+const steleCyanTokenGroups: ThemeTokenGroup[] = [
+  {
+    title: 'Arco 核心色阶',
+    description: '纯色候选 B 用碑青做主轴，但仍按 Arco 正式色阶命名和派生组件态。',
+    tokens: [
+      { label: '主色 6', name: '--primary-6', value: '#546A6F', usage: '主操作 / 主链接' },
+      { label: '主色 7', name: '--primary-7', value: '#3A5D66', usage: '按下态 / 深强调' },
+      { label: '链接 6', name: '--link-6', value: '#8A7254', usage: '辅助标签 / 次强调' },
+      { label: '主色浅底', name: '--color-primary-light-1', value: '#E8FFFF', usage: '主色弱背景' }
+    ]
+  },
+  {
+    title: 'Arco 中性层级',
+    description: '浅色纯色预设依然复用 Arco 的 light bg / text / border 层，保证消费面和其他主题一致。',
+    tokens: [
+      { label: '主文字', name: '--color-text-1', value: '#1D2129', usage: '标题 / 正文' },
+      { label: '次文字', name: '--color-text-2', value: '#4E5969', usage: '说明 / 次文案' },
+      { label: '页面背景', name: '--color-bg-1', value: '#F7F8FA', usage: '页面根背景' },
+      { label: '卡片背景', name: '--color-bg-2', value: '#FFFFFF', usage: '卡片 / 面板' },
+      { label: '默认边框', name: '--color-border-2', value: '#E5E6EB', usage: '边框 / 分割线' }
+    ]
+  },
+  {
+    title: 'Arco 语义状态',
+    description: '状态色仍是单独一层，和业务扩展色分离，弱背景统一来自 Arco light token。',
+    tokens: [
+      { label: '成功 6', name: '--success-6', value: '#607B62', usage: '完成 / 成功' },
+      { label: '警示 6', name: '--warning-6', value: '#A88552', usage: '提醒 / 待处理' },
+      { label: '风险 6', name: '--danger-6', value: '#B16A64', usage: '删除 / 风险' },
+      { label: '成功浅底', name: '--color-success-light-1', value: '#EAFFE8', usage: '状态弱背景' }
+    ]
+  },
+  {
+    title: 'Scene 扩展',
+    description: '场景扩展继续服务祭台页，但只保留业务层真正要消费的那一组 token。',
+    tokens: [
+      { label: '灰紫', name: '--scene-primary-6', value: '#837680', usage: '弱装饰 / 深层点缀' },
+      { label: '碑青', name: '--scene-accent-6', value: '#546A6F', usage: '辅助信息 / 线框' },
+      { label: '温金', name: '--scene-warning-6', value: '#A88552', usage: '仪式高亮 / 徽标' },
+      { label: '场景面板', name: '--scene-panel', value: 'rgba(255, 252, 247, 0.92)', usage: '组件面层' }
+    ]
+  }
+]
+
+interface ThemePosterPalette {
+  backgroundTop: string
+  backgroundMid: string
+  backgroundBottom: string
+  glowPrimaryFill: string
+  glowPrimaryShadow: string
+  glowSecondaryFill: string
+  glowSecondaryShadow: string
+  panelTop: string
+  panelBottom: string
+  panelBorder: string
+  eyebrow: string
+  badgeBackground: string
+  badgeBorder: string
+  badgeText: string
+  glyphStart: string
+  glyphEnd: string
+  glyphText: string
+  title: string
+  ancestor: string
+  bodyText: string
+  hintBackground: string
+  hintBorder: string
+  hintText: string
+  metricCardBackground: string
+  metricCardBorder: string
+  metricPrimary: string
+  metricSecondary: string
+  metricTertiary: string
+  metricLabel: string
+  memoEyebrow: string
+  divider: string
+  signature: string
+  action: string
+}
+
+export const themePosterPalettes: Record<ThemePresetId, ThemePosterPalette> = {
+  light: {
+    backgroundTop: '#e8f9ff',
+    backgroundMid: '#f7f8fa',
+    backgroundBottom: '#edf2f5',
+    glowPrimaryFill: '#355a76',
+    glowPrimaryShadow: 'rgba(53, 90, 118, 0.26)',
+    glowSecondaryFill: '#587d76',
+    glowSecondaryShadow: 'rgba(88, 125, 118, 0.18)',
+    panelTop: 'rgba(255, 255, 255, 0.98)',
+    panelBottom: 'rgba(247, 248, 250, 0.98)',
+    panelBorder: 'rgba(53, 90, 118, 0.16)',
+    eyebrow: '#587d76',
+    badgeBackground: 'rgba(181, 138, 71, 0.12)',
+    badgeBorder: 'rgba(181, 138, 71, 0.24)',
+    badgeText: '#b58a47',
+    glyphStart: '#355a76',
+    glyphEnd: 'rgba(88, 125, 118, 0.16)',
+    glyphText: '#ffffff',
+    title: '#1d2129',
+    ancestor: '#355a76',
+    bodyText: '#4e5969',
+    hintBackground: 'rgba(53, 90, 118, 0.06)',
+    hintBorder: 'rgba(53, 90, 118, 0.16)',
+    hintText: '#355a76',
+    metricCardBackground: 'rgba(247, 248, 250, 0.94)',
+    metricCardBorder: 'rgba(53, 90, 118, 0.12)',
+    metricPrimary: '#355a76',
+    metricSecondary: '#587d76',
+    metricTertiary: '#b58a47',
+    metricLabel: '#86909c',
+    memoEyebrow: '#86909c',
+    divider: 'rgba(53, 90, 118, 0.14)',
+    signature: '#4e5969',
+    action: '#355a76'
+  },
+  dark: {
+    backgroundTop: '#232324',
+    backgroundMid: '#1d1d1f',
+    backgroundBottom: '#17171a',
+    glowPrimaryFill: '#c3a15f',
+    glowPrimaryShadow: 'rgba(195, 161, 95, 0.26)',
+    glowSecondaryFill: '#758b93',
+    glowSecondaryShadow: 'rgba(117, 139, 147, 0.18)',
+    panelTop: 'rgba(42, 42, 43, 0.98)',
+    panelBottom: 'rgba(23, 23, 26, 0.98)',
+    panelBorder: 'rgba(195, 161, 95, 0.18)',
+    eyebrow: '#758b93',
+    badgeBackground: 'rgba(195, 161, 95, 0.14)',
+    badgeBorder: 'rgba(195, 161, 95, 0.26)',
+    badgeText: '#c3a15f',
+    glyphStart: '#c3a15f',
+    glyphEnd: 'rgba(117, 139, 147, 0.18)',
+    glyphText: '#17171a',
+    title: 'rgba(255, 255, 255, 0.9)',
+    ancestor: '#c3a15f',
+    bodyText: 'rgba(255, 255, 255, 0.7)',
+    hintBackground: 'rgba(117, 139, 147, 0.12)',
+    hintBorder: 'rgba(117, 139, 147, 0.2)',
+    hintText: '#758b93',
+    metricCardBackground: 'rgba(49, 49, 50, 0.94)',
+    metricCardBorder: 'rgba(255, 255, 255, 0.08)',
+    metricPrimary: '#c3a15f',
+    metricSecondary: '#758b93',
+    metricTertiary: '#b98179',
+    metricLabel: 'rgba(255, 255, 255, 0.5)',
+    memoEyebrow: 'rgba(255, 255, 255, 0.5)',
+    divider: 'rgba(255, 255, 255, 0.12)',
+    signature: 'rgba(255, 255, 255, 0.7)',
+    action: '#c3a15f'
+  },
+  'altar-gold': {
+    backgroundTop: '#232324',
+    backgroundMid: '#1d1d1f',
+    backgroundBottom: '#17171a',
+    glowPrimaryFill: '#c8a45c',
+    glowPrimaryShadow: 'rgba(200, 164, 92, 0.28)',
+    glowSecondaryFill: '#6f8894',
+    glowSecondaryShadow: 'rgba(111, 136, 148, 0.18)',
+    panelTop: 'rgba(42, 42, 43, 0.98)',
+    panelBottom: 'rgba(23, 23, 26, 0.98)',
+    panelBorder: 'rgba(200, 164, 92, 0.2)',
+    eyebrow: '#6f8894',
+    badgeBackground: 'rgba(200, 164, 92, 0.16)',
+    badgeBorder: 'rgba(200, 164, 92, 0.28)',
+    badgeText: '#c8a45c',
+    glyphStart: '#c8a45c',
+    glyphEnd: 'rgba(111, 136, 148, 0.18)',
+    glyphText: '#17171a',
+    title: 'rgba(255, 255, 255, 0.9)',
+    ancestor: '#c8a45c',
+    bodyText: 'rgba(255, 255, 255, 0.7)',
+    hintBackground: 'rgba(111, 136, 148, 0.12)',
+    hintBorder: 'rgba(111, 136, 148, 0.2)',
+    hintText: '#6f8894',
+    metricCardBackground: 'rgba(49, 49, 50, 0.94)',
+    metricCardBorder: 'rgba(255, 255, 255, 0.08)',
+    metricPrimary: '#c8a45c',
+    metricSecondary: '#6f8894',
+    metricTertiary: '#c8827d',
+    metricLabel: 'rgba(255, 255, 255, 0.5)',
+    memoEyebrow: 'rgba(255, 255, 255, 0.5)',
+    divider: 'rgba(255, 255, 255, 0.12)',
+    signature: 'rgba(255, 255, 255, 0.7)',
+    action: '#c8a45c'
+  },
+  'stele-cyan': {
+    backgroundTop: '#e8ffff',
+    backgroundMid: '#f7f8fa',
+    backgroundBottom: '#edf2f5',
+    glowPrimaryFill: '#546a6f',
+    glowPrimaryShadow: 'rgba(84, 106, 111, 0.26)',
+    glowSecondaryFill: '#8a7254',
+    glowSecondaryShadow: 'rgba(138, 114, 84, 0.18)',
+    panelTop: 'rgba(255, 255, 255, 0.98)',
+    panelBottom: 'rgba(247, 248, 250, 0.98)',
+    panelBorder: 'rgba(84, 106, 111, 0.16)',
+    eyebrow: '#8a7254',
+    badgeBackground: 'rgba(168, 133, 82, 0.12)',
+    badgeBorder: 'rgba(168, 133, 82, 0.24)',
+    badgeText: '#a88552',
+    glyphStart: '#546a6f',
+    glyphEnd: 'rgba(138, 114, 84, 0.14)',
+    glyphText: '#ffffff',
+    title: '#1d2129',
+    ancestor: '#546a6f',
+    bodyText: '#4e5969',
+    hintBackground: 'rgba(84, 106, 111, 0.06)',
+    hintBorder: 'rgba(84, 106, 111, 0.16)',
+    hintText: '#546a6f',
+    metricCardBackground: 'rgba(247, 248, 250, 0.94)',
+    metricCardBorder: 'rgba(84, 106, 111, 0.12)',
+    metricPrimary: '#546a6f',
+    metricSecondary: '#8a7254',
+    metricTertiary: '#a88552',
+    metricLabel: '#86909c',
+    memoEyebrow: '#86909c',
+    divider: 'rgba(84, 106, 111, 0.14)',
+    signature: '#4e5969',
+    action: '#546a6f'
+  }
+}
 
 export const DEFAULT_THEME_PRESET_ID: ThemePresetId = 'light'
 
@@ -119,16 +385,16 @@ export const themePresets: ThemePreset[] = [
     mode: 'light',
     label: '黛蓝灰',
     title: '浅色日巡',
-    description: '更适合看品牌基蓝、中性色层级和常规组件语义，强调清晰、秩序和可读性。',
+    description: '主题根层直接使用 Arco 正式 token 命名，标准页面走 neutral / bg / border 结构层，赛博场景则通过 scene token 扩展。',
     themeClass: 'theme-light',
     tokenGroups: themeTokenGroups
   },
   {
     id: 'dark',
     mode: 'dark',
-    label: '夜航蓝',
-    title: '赛博夜航',
-    description: '更适合看深空底色、霓虹紫和电子蓝的发光关系，强调热梗感和科技冲击力。',
+    label: '夜祠墨',
+    title: '夜祠深巡',
+    description: '深色主题同样直接落在 Arco 正式 token 上，再把夜祠场景色挂到 scene 扩展层，结构和业务扩展分离。',
     themeClass: 'theme-dark',
     tokenGroups: cyberThemeTokenGroups
   },
@@ -136,101 +402,19 @@ export const themePresets: ThemePreset[] = [
     id: 'altar-gold',
     mode: 'dark',
     label: '夜祠金',
-    title: '无渐变候选 A',
-    description: '深炭黑底配香火金主色和档案青辅助，高亮收束，层次只靠纯色、边框和阴影推进。',
+    title: '纯色候选 A',
+    description: '以金色为主品牌轴的深色纯色版本，页面不再堆渐变，主题根层直接使用 Arco 正式 token + scene 扩展。',
     themeClass: 'theme-solid-altar-gold',
-    tokenGroups: [
-      {
-        title: '基础语义变量',
-        description: '主操作和辅助强调都沿用现有语义命名，不新增命名分支。',
-        tokens: [
-          { label: '主按钮', name: '--color-primary', value: '#C8A45C', usage: '主操作 / 强 CTA' },
-          { label: '按下态', name: '--color-primary-pressed', value: '#A88443', usage: '主按钮按下' },
-          { label: '次强调', name: '--color-accent', value: '#6F8894', usage: '次级信息高亮' },
-          { label: '主色浅底', name: '--color-primary-soft', value: '#2B2418', usage: '主色弱背景' }
-        ]
-      },
-      {
-        title: '界面层变量',
-        description: '页面不再依赖渐变起伏，直接用深底、卡片面和边框层级制造厚度。',
-        tokens: [
-          { label: '页面底', name: '--color-bg-page', value: '#121416', usage: '页面根背景' },
-          { label: '卡片底', name: '--color-bg-card', value: '#1B1F23', usage: '卡片 / 面板背景' },
-          { label: '主要文字', name: '--color-text-primary', value: '#F3EEE5', usage: '标题 / 正文' },
-          { label: '默认边框', name: '--color-border', value: '#363028', usage: '边框 / 分割线' }
-        ]
-      },
-      {
-        title: '赛博扩展变量',
-        description: '保留现有扩展变量键名，但把色感压到更克制的“夜祠”方向。',
-        tokens: [
-          { label: '金色主轴', name: '--color-cyber-gold', value: '#C8A45C', usage: '仪式高亮 / 徽标' },
-          { label: '档案青', name: '--color-cyber-cyan', value: '#6F8894', usage: '辅助信息 / 线框' },
-          { label: '烟紫', name: '--color-cyber-violet', value: '#786871', usage: '弱装饰 / 深层点缀' },
-          { label: '面板纯色', name: '--color-cyber-panel', value: 'rgba(25, 28, 32, 0.84)', usage: '组件面层' }
-        ]
-      },
-      {
-        title: '状态语义变量',
-        description: '状态色依旧只表达结果，不拿来制造装饰性冲突。',
-        tokens: [
-          { label: '成功', name: '--color-success', value: '#6D8A74', usage: '完成 / 成功' },
-          { label: '警示', name: '--color-warning', value: '#C8A45C', usage: '提醒 / 待处理' },
-          { label: '风险', name: '--color-danger', value: '#C8827D', usage: '删除 / 风险' },
-          { label: '信息', name: '--color-info', value: '#7F98A4', usage: '说明 / 通知' }
-        ]
-      }
-    ]
+    tokenGroups: altarGoldTokenGroups
   },
   {
     id: 'stele-cyan',
     mode: 'light',
     label: '碑青灰',
-    title: '无渐变候选 B',
-    description: '碑面灰和纸页米白做底，主色改为碑青，整体更安静，适合轻纪念和档案感页面。',
+    title: '纯色候选 B',
+    description: '以碑青为主品牌轴的浅色纯色版本，整体更安静，变量组织保持和其他主题同一套 Arco 正式分层。',
     themeClass: 'theme-solid-stele-cyan',
-    tokenGroups: [
-      {
-        title: '基础语义变量',
-        description: '主色偏碑青，辅助色转为温纸棕，仍然完全复用当前变量命名。',
-        tokens: [
-          { label: '主按钮', name: '--color-primary', value: '#546A6F', usage: '主操作 / 主链接' },
-          { label: '按下态', name: '--color-primary-pressed', value: '#43545A', usage: '主按钮按下' },
-          { label: '次强调', name: '--color-accent', value: '#8A7254', usage: '辅助标签 / 次强调' },
-          { label: '主色浅底', name: '--color-primary-soft', value: '#EAF0F1', usage: '主色弱背景' }
-        ]
-      },
-      {
-        title: '界面层变量',
-        description: '整体不再用渐变和雾面叠层，改用纸页色差和边框秩序拉开层级。',
-        tokens: [
-          { label: '页面底', name: '--color-bg-page', value: '#F4F1EB', usage: '页面根背景' },
-          { label: '卡片底', name: '--color-bg-card', value: '#FFFCF7', usage: '卡片 / 面板背景' },
-          { label: '主要文字', name: '--color-text-primary', value: '#2D3134', usage: '标题 / 正文' },
-          { label: '默认边框', name: '--color-border', value: '#D8D1C8', usage: '边框 / 分割线' }
-        ]
-      },
-      {
-        title: '赛博扩展变量',
-        description: '扩展层继续保留兼容位，但色相转成碑青、温金和灰紫，避免夜店感。',
-        tokens: [
-          { label: '温金', name: '--color-cyber-gold', value: '#A88552', usage: '仪式高亮 / 徽标' },
-          { label: '碑青', name: '--color-cyber-cyan', value: '#546A6F', usage: '辅助信息 / 线框' },
-          { label: '灰紫', name: '--color-cyber-violet', value: '#837680', usage: '弱装饰 / 深层点缀' },
-          { label: '面板纯色', name: '--color-cyber-panel', value: 'rgba(255, 252, 247, 0.92)', usage: '组件面层' }
-        ]
-      },
-      {
-        title: '状态语义变量',
-        description: '状态色全部走纯色块，不额外叠渐变边缘。',
-        tokens: [
-          { label: '成功', name: '--color-success', value: '#607B62', usage: '完成 / 成功' },
-          { label: '警示', name: '--color-warning', value: '#A88552', usage: '提醒 / 待处理' },
-          { label: '风险', name: '--color-danger', value: '#B16A64', usage: '删除 / 风险' },
-          { label: '信息', name: '--color-info', value: '#607784', usage: '说明 / 通知' }
-        ]
-      }
-    ]
+    tokenGroups: steleCyanTokenGroups
   }
 ]
 

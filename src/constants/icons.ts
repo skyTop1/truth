@@ -93,6 +93,22 @@ export const appIcons = {
       { tag: 'path', d: 'M12 10c.6 1 1.5 1.6 1.5 3a1.5 1.5 0 1 1-3 0c0-1.4.9-2 1.5-3Z' }
     ]
   },
+  'ancestor-tablet': {
+    viewBox: '0 0 24 24',
+    strokeWidth: 1.5,
+    nodes: [
+      {
+        tag: 'path',
+        d: 'M8.25 18.45h7.5a1.75 1.75 0 0 0 1.75-1.75V9.15a5.5 5.5 0 1 0-11 0v7.55a1.75 1.75 0 0 0 1.75 1.75Z'
+      },
+      { tag: 'rect', x: 9.15, y: 8.6, width: 5.7, height: 7.55, rx: 0.9 },
+      { tag: 'path', d: 'M10.45 10.55h3.1' },
+      { tag: 'path', d: 'M10.45 12.55h3.1' },
+      { tag: 'path', d: 'M11 14.55h2' },
+      { tag: 'path', d: 'M7.2 20.15h9.6' },
+      { tag: 'path', d: 'M8.9 21.8h6.2' }
+    ]
+  },
   'share-2': {
     viewBox: '0 0 24 24',
     nodes: [
@@ -101,19 +117,6 @@ export const appIcons = {
       { tag: 'circle', cx: 18, cy: 19, r: 3 },
       { tag: 'path', d: 'm8.6 13.5 6.8 3.9' },
       { tag: 'path', d: 'm15.4 6.6-6.8 3.8' }
-    ]
-  },
-  palette: {
-    viewBox: '0 0 24 24',
-    nodes: [
-      {
-        tag: 'path',
-        d: 'M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'
-      },
-      { tag: 'circle', cx: 13.5, cy: 6.5, r: 0.5, fill: 'currentColor', stroke: 'none' },
-      { tag: 'circle', cx: 17.5, cy: 10.5, r: 0.5, fill: 'currentColor', stroke: 'none' },
-      { tag: 'circle', cx: 6.5, cy: 12.5, r: 0.5, fill: 'currentColor', stroke: 'none' },
-      { tag: 'circle', cx: 8.5, cy: 7.5, r: 0.5, fill: 'currentColor', stroke: 'none' }
     ]
   },
   'package-open': {

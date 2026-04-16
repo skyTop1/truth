@@ -59,8 +59,10 @@
 src
 ├── App.vue
 ├── main.ts
+├── env.d.ts
 ├── pages.json
 ├── manifest.json
+├── uni.scss
 ├── api/
 ├── components/app/
 ├── composables/
@@ -77,8 +79,9 @@ src
 
 | 路径 | 说明 |
 | --- | --- |
-| `src/main.ts` | 创建 SSR App，注册 Pinia。 |
-| `src/App.vue` | uni-app 全局生命周期入口，在 `onLaunch / onShow` 阶段同步当前主题预设并保留基础日志。 |
+| `src/main.ts` | 创建 SSR App，注册 Pinia，全局注册 `AppThemePage`。 |
+| `src/App.vue` | uni-app 全局生命周期入口，在 `onLaunch / onShow` 阶段同步当前主题预设并保留基础日志；全局引入 `runtime-theme.scss`。 |
+| `src/env.d.ts` | TypeScript 环境声明，包含 `@dcloudio/types`、`vite/client` 和 `*.vue` 模块声明。 |
 | `src/pages.json` | 页面路由、分包、全局导航样式、`easycom` 配置。 |
 | `src/manifest.json` | uni-app 工程平台配置。 |
 
@@ -96,24 +99,30 @@ src
 
 `src/components/app/` 存放整个应用复用的基础 UI 组件和业务展示组件。
 
-### 3.4 状态与数据层
+### 3.4 组合式函数层
+
+| 路径 | 说明 |
+| --- | --- |
+| `src/composables/useTheme.ts` | 主题组合式函数，包装 `useAppStore` 的主题相关字段和方法，供页面和组件直接消费。暴露 `activeThemePreset`、`themePreset`、`themeMode`、`themeLabel`、`themeClass`，以及 `hydrateThemeMode`、`setThemePreset`、`setThemeMode`、`toggleThemeMode`。 |
+
+### 3.5 状态与数据层
 
 | 路径 | 说明 |
 | --- | --- |
 | `src/stores/app.ts` | 应用级状态，负责当前主题预设、亮暗语义、主题缓存迁移与根节点 class 同步。 |
 | `src/stores/ritual.ts` | 核心业务 store，负责本地祖域仓读写、归档修复、记录和海报管理。 |
 
-### 3.5 常量层
+### 3.6 常量层
 
 | 路径 | 说明 |
 | --- | --- |
 | `src/constants/icons.ts` | 本地图标定义。 |
 | `src/constants/navigation.ts` | 自定义 tabBar 项。 |
 | `src/constants/ritual.ts` | 仪式动作模板、消息模板、祖域缓存 key 与版本。 |
-| `src/constants/status.ts` | 用户可见状态、中文映射、状态标签文案、旧英文兼容映射。 |
-| `src/constants/theme.ts` | 四套运行时主题预设、亮暗映射、主题 class 和 token 展示数据。 |
+| `src/constants/status.ts` | 用户可见状态映射、中文标签、旧英文兼容、赛博视觉文案集中收口。同时从 `src/types/status.ts` 重新导出 `StatusTagVariant`、`BackupImportStatus`、`PosterStatus`。 |
+| `src/constants/theme.ts` | 四套运行时主题预设配置、亮暗映射、主题 class、token 展示数据、海报色板（`themePosterPalettes`，每套主题约 28 个 Canvas 绘图专用色值）。 |
 
-### 3.6 工具层
+### 3.7 工具层
 
 | 路径 | 说明 |
 | --- | --- |
@@ -122,26 +131,24 @@ src
 | `src/utils/theme-root.ts` | H5 根节点主题 class 同步工具。 |
 | `src/utils/uni-page.ts` | 页面参数读取与分享注册兼容层。 |
 
-### 3.7 类型层
+### 3.8 类型层
 
 | 路径 | 说明 |
 | --- | --- |
 | `src/types/ritual.ts` | 仪式、海报、归档结构类型。 |
 | `src/types/navigation.ts` | tabBar 项类型。 |
 | `src/types/theme.ts` | 主题模式、主题预设 ID、主题预设和 token 结构类型。 |
+| `src/types/status.ts` | 状态标签变体、备份导入状态、海报状态类型。 |
 
-### 3.8 样式层
+### 3.9 样式层
 
 | 路径 | 说明 |
 | --- | --- |
-| `src/styles/tokens.scss` | 设计 token。 |
-| `src/styles/semantic.scss` | 语义色变量。 |
-| `src/styles/theme-light.scss` | 浅色主题变量。 |
-| `src/styles/theme-dark.scss` | 深色主题变量。 |
-| `src/styles/theme-solid.scss` | 两套无渐变候选主题变量。 |
-| `src/styles/runtime-theme.scss` | 主题变量汇总入口，统一引入 light / dark / solid 三组主题。 |
-| `src/styles/index.scss` | `tokens` 与 `semantic` 统一导出入口。 |
-| `src/uni.scss` | uni-app 样式入口。 |
+| `src/styles/theme-light.scss` | 浅色主题变量，选择器为 `:root, page, .theme-light`。 |
+| `src/styles/theme-dark.scss` | 深色主题变量，选择器为 `.theme-dark`。 |
+| `src/styles/theme-solid.scss` | 两套无渐变候选主题变量，选择器分别为 `.theme-solid-altar-gold` 和 `.theme-solid-stele-cyan`。 |
+| `src/styles/runtime-theme.scss` | 主题变量汇总入口，统一引入四套主题根 token；同时设置 `page / body / view / text / button / input / textarea / image` 的基础样式，并包含 `prefers-reduced-motion` 覆盖。 |
+| `src/uni.scss` | uni-app 样式入口，将 uni-app SCSS 变量（`$uni-color-primary` 等）映射到 CSS 自定义属性（`--primary-6` 等），作为 uni-ui 桥接层。 |
 
 ## 4. 路由与页面入口说明
 
@@ -245,11 +252,13 @@ interface RitualArchive {
   recentAncestorName: string
   records: RitualRecord[]
   posters: PosterRecord[]
-  meta: {
-    lastHydratedAt: string
-    lastMutationAt: string
-    lastBackupAt: string
-  }
+  meta: RitualArchiveMeta
+}
+
+interface RitualArchiveMeta {
+  lastHydratedAt: string
+  lastMutationAt: string
+  lastBackupAt: string
 }
 ```
 
@@ -373,16 +382,25 @@ interface RitualArchive {
 | --- | --- | --- |
 | `createLocalId` | `(prefix: string) => string` | 生成形如 `prefix-timestamp-random` 的本地唯一 ID |
 
-### 8.3 页面参数工具
+### 8.3 主题根节点同步工具
+
+路径：`src/utils/theme-root.ts`
+
+| 方法 | 签名 | 说明 |
+| --- | --- | --- |
+| `syncThemeRootClass` | `(themeClass: string) => void` | H5 专用（条件编译 `#ifdef H5`），移除 `<html>` 和 `<body>` 上的全部主题 class，然后添加当前激活主题 class，保证 H5 端主题切换生效 |
+
+### 8.4 页面参数工具
 
 路径：`src/utils/uni-page.ts`
 
 | 方法 | 签名 | 说明 |
 | --- | --- | --- |
-| `getCurrentPageOptions` | `() => Record<string, string \| undefined> \| undefined` | 兼容方式读取当前页面 query 参数 |
-| `registerShareAppMessage` | `(hook) => void` | 注册小程序分享内容 |
+| `getCurrentPageOptions` | `() => Record<string, string \| undefined> \| undefined` | 兼容方式读取当前页面 query参数 |
 
-### 8.4 远程接口占位层
+> 小程序分享已改用 uni-app 生命周期钩子 `onShareAppMessage`（从 `@dcloudio/uni-app` 导入），不再通过 `uni-page.ts` 注册。
+
+### 8.5 远程接口占位层
 
 路径：`src/api/http.ts`、`src/api/modules/health.ts`
 
@@ -399,7 +417,8 @@ interface RitualArchive {
 
 | 组件 | Props | Emits / Slot | 说明 |
 | --- | --- | --- | --- |
-| `AppNavBar` | `title`、`subtitle?` | 默认插槽 | 自定义吸顶导航栏 |
+| `AppThemePage` | 无（内部使用 `useTheme()`） | 默认插槽 | 主题上下文容器，将当前主题 class 应用到根 `<view>` |
+| `AppNavBar` | `title`、`subtitle?` | 默认插槽、`left` | 自定义吸顶导航栏 |
 | `AppTabBar` | `items`、`activeKey` | 无 | 自定义底部导航，内部使用 `uni.redirectTo` |
 | `AppCard` | `title?`、`subtitle?` | `default`、`extra` | 通用卡片容器 |
 | `AppTag` | `variant?` | 默认插槽 | 状态或标签丸子组件 |
@@ -415,12 +434,12 @@ interface RitualArchive {
 
 ### 9.3 图标与业务展示组件
 
-| 组件 | Props | 说明 |
-| --- | --- | --- |
-| `AppIcon` | `name`、`size?`、`color?`、`strokeWidth?`、`decorative?`、`label?` | 基于本地图标定义渲染 SVG |
-| `AppRitualAction` | `title`、`description`、`badge`、`energy`、`active`、`iconName` | 仪式动作卡片，点击触发 `toggle` |
-| `AppCyberAltar` | `statusLabel`、`title`、`subtitle`、`signalValue`、`incenseValue`、`ritualValue`、`protocolTags` | 首页祭台英雄组件 |
-| `AppSharePoster` | `title`、`badge`、`ancestorName`、`incenseValue`、`signalValue`、`ritualCount`、`message` | 结果页海报预览组件 |
+| 组件 | Props | Emits | 说明 |
+| --- | --- | --- | --- |
+| `AppIcon` | `name`、`size?`、`color?`、`strokeWidth?`、`decorative?`、`label?` | 无 | 基于本地图标定义渲染 SVG |
+| `AppRitualAction` | `title`、`description`、`badge`、`energy`、`active`、`iconName` | `toggle` | 仪式动作卡片，点击触发切换 |
+| `AppCyberAltar` | `statusLabel`、`title`、`subtitle`、`signalValue`、`incenseValue`、`ritualValue`、`protocolTags` | 无 | 首页祭台英雄组件 |
+| `AppSharePoster` | `title`、`badge`、`ancestorName`、`incenseValue`、`signalValue`、`ritualCount`、`message` | 无 | 结果页海报预览组件 |
 
 ## 10. 本地缓存结构与持久化策略
 
@@ -460,7 +479,7 @@ interface RitualArchive {
 | 预设 ID | 标签 | 语义模式 | class |
 | --- | --- | --- | --- |
 | `light` | `黛蓝灰` | `light` | `theme-light` |
-| `dark` | `夜航蓝` | `dark` | `theme-dark` |
+| `dark` | `夜祠墨` | `dark` | `theme-dark` |
 | `altar-gold` | `夜祠金` | `dark` | `theme-solid-altar-gold` |
 | `stele-cyan` | `碑青灰` | `light` | `theme-solid-stele-cyan` |
 
@@ -470,6 +489,7 @@ interface RitualArchive {
 - 无渐变主题不新增变量命名，只把 `--gradient-cyber-*` 降级为纯色或透明层
 - H5 通过 `theme-root.ts` 把 class 同步到 `html` / `body`
 - 页面容器通过 `AppThemePage` 承接当前主题 class，保证小程序和 H5 行为一致
+- 海报 Canvas 渲染不依赖 CSS 变量，而是通过 `themePosterPalettes` 在 JavaScript 侧获取当前主题的专用色板，每套主题约 28 个色值覆盖背景、面板、光球、文字、边框、分割线、签名等绘制要素
 
 ## 11. 软件流程说明
 
@@ -490,7 +510,7 @@ interface RitualArchive {
 
 ### 11.2 启动流程
 
-1. `main.ts` 创建应用并挂载 Pinia。
+1. `main.ts` 创建应用并挂载 Pinia，全局注册 `AppThemePage`。
 2. `App.vue` 在 `onLaunch / onShow` 时调用 `appStore.hydrateThemeMode()`，同步主题预设。
 3. 首页或其他页面首次渲染时调用 `ritualStore.ensureHydrated()`。
 4. store 从本地读取 `truth.cyber-ritual.archive`。
@@ -527,14 +547,23 @@ interface RitualArchive {
 3. 结果页立刻调用 `persistRitualRecord()`，把本次记录写入 store。
 4. 如果本地已有海报缓存，则恢复海报并标记 `restored`。
 5. 如果没有缓存，则自动或手动执行 `generatePoster()`。
-6. 海报生成成功后：
+6. 海报 Canvas 渲染采用三遍策略：
+   - Pass 1：用 `wrapText` 测量各区域行数，推算动态 Y 坐标（`titleBottom`、`messageBottom`、`metricTop`、`memoTop`、`footerTop`）
+   - Pass 2：根据动态 `panelHeight` 绘制背景渐变、光球、面板
+   - Pass 3：在面板上绘制标题、祖先称呼、文案、提示条、指标卡片、备忘块、分割线、签名和行动文案
+7. 面板高度和底部区域均为动态计算，不使用固定 Y 坐标，保证内容不超出面板边界
+8. 平台差异：
+   - H5：离屏 canvas + `toDataURL` 导出
+   - 原生：uni canvas 节点 + `canvasToTempFilePath` 导出
+9. 海报生成成功后：
    - 调用 `upsertPosterRecord()`
    - 更新海报状态为 `ready`
-7. 用户可执行：
-   - 重新生成分享图
-   - 预览 / 保存海报
-   - 再祭一次
-   - 去祖域页查看
+10. 用户可执行：
+    - 重新生成分享图
+    - 预览 / 保存海报（H5 预览图片，原生保存到相册）
+    - 再祭一次
+    - 去祖域页查看
+11. 微信分享通过 `onShareAppMessage` 生命周期钩子注册，分享图使用已生成的海报 URL
 
 ### 11.6 祖域页流程
 
@@ -608,12 +637,13 @@ interface RitualArchive {
 
 ## 13. 结论
 
-当前 `Truth` 的源码结构已经比较清晰，核心逻辑集中在四个层级：
+当前 `Truth` 的源码结构已经比较清晰，核心逻辑集中在五个层级：
 
 1. 页面层负责流程编排和用户交互
 2. 组件层负责复用 UI 和视觉呈现
-3. store 层负责本地祖域仓的读写与聚合
-4. 工具层负责缓存、ID 和 uni 页面兼容逻辑
+3. composable 层负责主题等跨页面共享逻辑的便捷消费
+4. store 层负责本地祖域仓的读写与聚合
+5. 工具层负责缓存、ID、主题根节点同步和 uni 页面兼容逻辑
 
 整个软件的核心闭环是：
 

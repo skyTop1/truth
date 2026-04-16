@@ -85,9 +85,7 @@ function handleMaskTap() {
 .app-dialog__mask {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at top, var(--color-cyber-violet-soft) 0%, transparent 34%),
-    var(--color-overlay);
+  background: var(--mask-color-bg);
   backdrop-filter: blur(12px);
 }
 
@@ -101,20 +99,10 @@ function handleMaskTap() {
   flex-direction: column;
   gap: 28rpx;
   padding: 36rpx;
-  background: var(--gradient-cyber-panel, var(--color-bg-card));
-  border: 2rpx solid var(--color-border);
-  border-radius: var(--radius-cyber-panel, 36rpx);
-  box-shadow: var(--shadow-cyber-float, var(--shadow-pop));
-}
-
-.app-dialog__panel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at top right, var(--color-cyber-cyan-faint) 0%, transparent 18%),
-    linear-gradient(180deg, var(--color-cyber-white-faint) 0%, transparent 100%);
-  pointer-events: none;
+  background: var(--color-bg-2);
+  border: 2rpx solid var(--color-border-2);
+  border-radius: var(--border-radius-large, 16rpx);
+  box-shadow: var(--shadow3-down);
 }
 
 .app-dialog__header,
@@ -129,13 +117,13 @@ function handleMaskTap() {
 .app-dialog__title {
   font-size: 32rpx;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-text-1);
 }
 
 .app-dialog__description {
   font-size: 25rpx;
   line-height: 1.7;
-  color: var(--color-text-secondary);
+  color: var(--color-text-2);
 }
 
 .app-dialog__footer {
@@ -162,13 +150,14 @@ function handleMaskTap() {
 }
 
 .app-dialog__button--secondary {
-  color: var(--color-text-primary);
-  background: var(--gradient-cyber-button-secondary, var(--color-bg-muted));
-  border-color: var(--color-cyber-panel-line-strong, var(--color-border));
+  color: var(--color-text-1);
+  background: var(--color-fill-2);
+  border-color: var(--color-border-2);
 }
 
 .app-dialog__button--primary {
-  color: var(--color-cyber-text-primary);
-  background: var(--gradient-cyber-button, var(--color-primary));
+  color: var(--color-bg-5);
+  background: var(--primary-6);
+  border-color: var(--primary-6);
 }
 </style>

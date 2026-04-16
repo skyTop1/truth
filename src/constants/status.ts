@@ -1,8 +1,7 @@
+import type { BackupImportStatus, PosterStatus, StatusTagVariant } from '@/types/status'
 import type { RitualArchiveHydrationState } from '@/types/ritual'
 
-export type StatusTagVariant = 'primary' | 'accent' | 'muted' | 'success' | 'warning' | 'danger'
-export type BackupImportStatus = 'idle' | 'success' | 'error'
-export type PosterStatus = 'idle' | 'generating' | 'ready' | 'restored' | 'failed' | 'stale' | 'save-blocked'
+export type { BackupImportStatus, PosterStatus, StatusTagVariant } from '@/types/status'
 
 export interface StatusDisplayMeta {
   label: string

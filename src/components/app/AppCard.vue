@@ -28,37 +28,10 @@ defineProps<{
   flex-direction: column;
   gap: 24rpx;
   padding: 32rpx;
-  background: var(--gradient-cyber-panel, var(--color-bg-card));
-  border: 2rpx solid var(--color-border);
-  border-radius: var(--radius-cyber-panel, 36rpx);
-  box-shadow: var(--shadow-cyber-panel, var(--shadow-card));
-  backdrop-filter: blur(24px);
-}
-
-.app-card::before,
-.app-card::after {
-  content: '';
-  position: absolute;
-  pointer-events: none;
-}
-
-.app-card::before {
-  inset: 0;
-  background:
-    radial-gradient(circle at 8% 12%, var(--color-cyber-cyan-faint) 0%, transparent 18%),
-    radial-gradient(circle at 92% 0%, var(--color-cyber-violet-soft) 0%, transparent 20%),
-    linear-gradient(180deg, var(--color-cyber-white-ghost) 0%, transparent 100%);
-}
-
-.app-card::after {
-  top: 22rpx;
-  right: 22rpx;
-  width: 96rpx;
-  height: 96rpx;
-  border-top: 2rpx solid var(--color-cyber-panel-line-strong, var(--color-border-strong));
-  border-right: 2rpx solid var(--color-cyber-panel-line-strong, var(--color-border-strong));
-  border-radius: 0 24rpx 0 0;
-  opacity: 0.72;
+  background: var(--color-bg-2);
+  border: 2rpx solid var(--color-border-2);
+  border-radius: var(--border-radius-large, 16rpx);
+  box-shadow: var(--shadow1-down);
 }
 
 .app-card__header {
@@ -80,14 +53,14 @@ defineProps<{
   font-size: 30rpx;
   font-weight: 700;
   letter-spacing: 1rpx;
-  color: var(--color-text-primary);
+  color: var(--color-text-1);
 }
 
 .app-card__subtitle {
   max-width: 560rpx;
   font-size: 22rpx;
   line-height: 1.7;
-  color: var(--color-text-secondary);
+  color: var(--color-text-2);
 }
 
 .app-card__body {

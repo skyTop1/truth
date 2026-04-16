@@ -104,7 +104,7 @@ function switchTheme(presetId: ThemePresetId) {
 .preview-page {
   position: relative;
   min-height: 100vh;
-  background: var(--color-bg-page);
+  background: var(--color-bg-1);
   overflow: hidden;
   transition:
     background-color 220ms ease,
@@ -115,10 +115,7 @@ function switchTheme(presetId: ThemePresetId) {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at 10% 0%, var(--preview-glow-primary) 0%, transparent 28%),
-    radial-gradient(circle at 90% 12%, var(--preview-glow-secondary) 0%, transparent 18%),
-    linear-gradient(180deg, var(--preview-bg-top) 0%, var(--preview-bg-bottom) 100%);
+  background: var(--preview-bg-bottom);
   pointer-events: none;
 }
 
@@ -126,51 +123,34 @@ function switchTheme(presetId: ThemePresetId) {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: var(--overlay-cyber-grid, none);
-  background-size: 48rpx 48rpx;
-  opacity: var(--preview-grid-opacity);
+  background: transparent;
+  opacity: 0;
   pointer-events: none;
 }
 
 .preview-page--light {
-  --preview-glow-primary: var(--color-primary-soft);
-  --preview-glow-secondary: var(--color-accent-soft);
-  --preview-bg-top: var(--color-bg-page);
-  --preview-bg-bottom: var(--color-bg-muted);
+  --preview-glow-primary: var(--color-primary-light-2);
+  --preview-glow-secondary: var(--color-link-light-2);
+  --preview-bg-top: var(--color-primary-light-1);
+  --preview-bg-bottom: var(--color-bg-1);
   --preview-grid-opacity: 0.08;
 }
 
 .preview-page--dark {
-  --preview-glow-primary: var(--color-cyber-violet-soft-strong);
-  --preview-glow-secondary: var(--color-cyber-cyan-faint);
-  --preview-bg-top: var(--color-cyber-space-deep);
-  --preview-bg-bottom: var(--color-cyber-space);
+  --preview-glow-primary: var(--color-primary-light-2);
+  --preview-glow-secondary: var(--color-link-light-1);
+  --preview-bg-top: var(--color-bg-2);
+  --preview-bg-bottom: var(--color-bg-1);
   --preview-grid-opacity: 0.12;
 }
 
 .preview-page--altar-gold,
 .preview-page--stele-cyan {
-  --preview-glow-primary: transparent;
-  --preview-glow-secondary: transparent;
-  --preview-bg-top: var(--color-bg-page);
-  --preview-bg-bottom: var(--color-bg-page);
-  --preview-grid-opacity: 0;
-}
-
-.preview-page--light :deep(.app-nav-bar) {
-  background: linear-gradient(180deg, var(--color-bg-card) 0%, var(--color-bg-muted) 100%);
-  border-color: var(--color-border);
-}
-
-.preview-page--dark :deep(.app-nav-bar) {
-  background: linear-gradient(180deg, var(--color-cyber-nav) 0%, var(--color-cyber-nav-soft) 100%);
-  border-color: var(--color-cyber-border);
-}
-
-.preview-page--altar-gold :deep(.app-nav-bar),
-.preview-page--stele-cyan :deep(.app-nav-bar) {
-  background: var(--color-bg-card);
-  border-color: var(--color-border);
+  --preview-glow-primary: var(--color-primary-light-1);
+  --preview-glow-secondary: var(--color-link-light-1);
+  --preview-bg-top: var(--color-primary-light-1);
+  --preview-bg-bottom: var(--color-bg-1);
+  --preview-grid-opacity: 0.06;
 }
 
 .preview-page__content {
@@ -188,10 +168,10 @@ function switchTheme(presetId: ThemePresetId) {
   justify-content: center;
   width: 84rpx;
   height: 84rpx;
-  border: 2rpx solid var(--color-accent-soft);
+  border: 2rpx solid var(--color-link-light-3);
   border-radius: 24rpx;
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
+  background: var(--color-link-light-1);
+  color: var(--link-6);
 }
 
 .preview-theme-panel,
@@ -218,13 +198,13 @@ function switchTheme(presetId: ThemePresetId) {
 .preview-theme-panel__title {
   font-size: 34rpx;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-text-1);
 }
 
 .preview-theme-panel__description {
   font-size: 24rpx;
   line-height: 1.8;
-  color: var(--color-text-secondary);
+  color: var(--color-text-2);
 }
 
 .preview-grid {
@@ -238,9 +218,10 @@ function switchTheme(presetId: ThemePresetId) {
   flex-direction: column;
   gap: 10rpx;
   padding: 20rpx;
-  border: 2rpx solid var(--color-border);
-  background: var(--color-bg-muted);
+  border: 2rpx solid var(--color-border-2);
+  background: var(--color-bg-2);
   border-radius: 22rpx;
+  box-shadow: var(--shadow1-down);
 }
 
 .preview-token__swatch {
@@ -251,12 +232,12 @@ function switchTheme(presetId: ThemePresetId) {
 .preview-token__name {
   font-size: 24rpx;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-text-1);
 }
 
 .preview-token__value,
 .preview-token__usage {
   font-size: 22rpx;
-  color: var(--color-text-secondary);
+  color: var(--color-text-2);
 }
 </style>

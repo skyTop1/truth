@@ -60,33 +60,13 @@ const hasRightSlot = computed(() => {
   align-items: center;
   gap: 18rpx;
   padding: calc(var(--status-bar-height, 0px) + 20rpx) 28rpx 24rpx;
-  background: var(--gradient-cyber-panel, var(--color-bg-page));
-  border: 2rpx solid var(--color-border);
-  border-radius: 0 0 var(--radius-cyber-panel, 36rpx) var(--radius-cyber-panel, 36rpx);
-  box-shadow: var(--shadow-cyber-float, var(--shadow-card));
+  background: var(--color-bg-5);
+  border: 2rpx solid var(--color-border-2);
+  border-radius: 0 0 var(--border-radius-large, 16rpx) var(--border-radius-large, 16rpx);
+  box-shadow: var(--shadow2-down);
   backdrop-filter: blur(24px);
 }
 
-.app-nav-bar::before,
-.app-nav-bar::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 0;
-  pointer-events: none;
-}
-
-.app-nav-bar::before {
-  top: 0;
-  height: 2rpx;
-  background: var(--gradient-cyber-highlight);
-}
-
-.app-nav-bar::after {
-  top: 0;
-  background:
-    radial-gradient(circle at 12% 20%, var(--color-cyber-cyan-faint) 0%, transparent 18%),
-    radial-gradient(circle at 88% 10%, var(--color-cyber-violet-soft) 0%, transparent 22%);
-}
 
 .app-nav-bar__content {
   position: relative;
@@ -114,14 +94,13 @@ const hasRightSlot = computed(() => {
   font-size: 40rpx;
   font-weight: 700;
   letter-spacing: 2rpx;
-  color: var(--color-text-primary);
-  text-shadow: 0 0 28rpx var(--color-cyber-violet-shadow);
+  color: var(--color-text-1);
 }
 
 .app-nav-bar__subtitle {
   font-size: 22rpx;
   line-height: 1.6;
   letter-spacing: 1rpx;
-  color: var(--color-text-secondary);
+  color: var(--color-text-3);
 }
 </style>

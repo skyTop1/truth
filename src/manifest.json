@@ -7,7 +7,29 @@
   "transformPx": false,
   "app-plus": {
     "usingComponents": true,
-    "nvueStyleCompiler": "uni-app"
+    "nvueStyleCompiler": "uni-app",
+    "optimization": {
+      "subPackages": true
+    },
+    "distribute": {
+      "android": {
+        "packagename": "",
+        "keystore": "",
+        "password": "",
+        "aliasname": ""
+      },
+      "ios": {
+        "appid": "",
+        "mobileprovision": "",
+        "p12": "",
+        "password": "",
+        "devices": "iphone",
+        "privacyDescription": {
+          "NSPhotoLibraryUsageDescription": "用于读取海报图片，供你预览与保存到本地设备。",
+          "NSPhotoLibraryAddUsageDescription": "用于将生成的祭祖海报保存到系统相册。"
+        }
+      }
+    }
   },
   "h5": {
     "title": "Truth"
