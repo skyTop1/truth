@@ -7,6 +7,7 @@ import {
   RITUAL_ARCHIVE_VERSION
 } from '@/constants/ritual'
 import { readLocalCache, removeLocalCache, writeLocalCache } from '@/utils/local-storage'
+import { normalizePersistablePosterImageUrl } from '@/utils/poster-cache'
 
 import type {
   AncestorProfile,
@@ -164,7 +165,7 @@ function normalizePosterRecord(rawRecord: unknown): PosterRecord {
         : DEFAULT_ANCESTOR_NAME,
     title: typeof record.title === 'string' ? record.title : '赛博祭祖海报',
     badge: typeof record.badge === 'string' ? record.badge : '祖域接入员',
-    imageUrl: typeof record.imageUrl === 'string' ? record.imageUrl : '',
+    imageUrl: normalizePersistablePosterImageUrl(record.imageUrl),
     createdAt: timestamp,
     updatedAt: typeof record.updatedAt === 'string' && record.updatedAt.length > 0 ? record.updatedAt : timestamp
   }

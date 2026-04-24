@@ -19,6 +19,7 @@ import {
   getStateActivityLabel
 } from '@/constants/status'
 import { useRitualStore } from '@/stores'
+import { buildRitualEntryUrl, buildRitualResultUrl } from '@/utils/ritual-navigation'
 
 import type { PosterRecord, RitualRecord } from '@/types/ritual'
 import type { BackupImportStatus, StatusTagVariant } from '@/types/status'
@@ -167,7 +168,7 @@ const posterEmptyTitle = computed(() => {
 const posterEmptyDescription = computed(() => {
   return ritualStore.totalRitualCount > 0
     ? '历史已经留在本机里了，但传播图还没生成。直接重开最近一条战报会更快。'
-    : '先生成一张赛博海报，这里才会出现你的本地图库。'
+    : '先生成一张赛博海报，这里才会出现可持久化的本地图库；H5 大图可能只留在当前页面预览。'
 })
 
 const posterEmptyActionLabel = computed(() => {
@@ -242,11 +243,11 @@ const dialogCancelText = computed(() => {
 
 const dialogList = computed(() => {
   if (activeDialogMode.value === 'import') {
-    return [
-      '1. 当前设备上的本地祖域仓会被备份内容覆盖',
+      return [
+        '1. 当前设备上的本地祖域仓会被备份内容覆盖',
       '2. 这个过程不经过云端，也不会上传任何 JSON',
-      '3. 恢复完成后，首页和祖域页会立刻切到恢复后的状态'
-    ]
+      '3. 导入时会丢弃远程图片、base64 图片等不安全海报缓存'
+      ]
   }
 
   if (activeDialogMode.value === 'remove-record') {
@@ -295,19 +296,25 @@ function openImportDialog() {
 
 function openRitualEntry() {
   void uni.navigateTo({
-    url: `/pages-sub/cyber/ritual-entry?ancestor=${encodeURIComponent(ritualStore.recentAncestorName || DEFAULT_ANCESTOR_NAME)}`
+    url: buildRitualEntryUrl({
+      ancestorName: ritualStore.recentAncestorName || DEFAULT_ANCESTOR_NAME
+    })
   })
 }
 
 function openRecord(record: RitualRecord) {
-  const message = encodeURIComponent(record.message)
-  const badge = encodeURIComponent(record.badge)
-  const ancestor = encodeURIComponent(record.ancestorName)
-  const title = encodeURIComponent(record.title)
-  const selected = encodeURIComponent(record.actionKeys.join(','))
-
   void uni.navigateTo({
-    url: `/pages-sub/cyber/ritual-result?ritualId=${encodeURIComponent(record.id)}&ancestor=${ancestor}&incense=${record.incenseValue}&signal=${record.signalValue}%&actions=${record.ritualCount}&selected=${selected}&badge=${badge}&message=${message}&title=${title}`
+    url: buildRitualResultUrl({
+      ritualId: record.id,
+      ancestorName: record.ancestorName,
+      incenseValue: record.incenseValue,
+      signalValue: `${record.signalValue}%`,
+      ritualCount: record.ritualCount,
+      selectedActionKeys: record.actionKeys,
+      badge: record.badge,
+      message: record.message,
+      title: record.title
+    })
   })
 }
 
@@ -321,12 +328,12 @@ function openLatestRecord() {
 }
 
 function reuseRecord(record: RitualRecord) {
-  const ancestor = encodeURIComponent(record.ancestorName)
-  const message = encodeURIComponent(record.message)
-  const selected = encodeURIComponent(record.actionKeys.join(','))
-
   void uni.navigateTo({
-    url: `/pages-sub/cyber/ritual-entry?ancestor=${ancestor}&message=${message}&selected=${selected}`
+    url: buildRitualEntryUrl({
+      ancestorName: record.ancestorName,
+      message: record.message,
+      selectedActionKeys: record.actionKeys
+    })
   })
 }
 
@@ -540,7 +547,7 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
         </text>
       </app-card>
 
-      <app-card title="手动恢复本地备份" subtitle="支持把另一台设备导出的本地备份 JSON 手动恢复到当前设备。">
+      <app-card title="手动恢复本地备份" subtitle="支持把另一台设备导出的本地备份 JSON 手动恢复到当前设备；远程图片和 base64 海报缓存会被过滤。">
         <view class="workbench-page__import-panel">
           <textarea
             v-model="backupImportDraft"
@@ -599,7 +606,7 @@ function formatRecordTime(value: string, fallbackLabel = '刚刚写入') {
         </app-empty>
       </app-card>
 
-      <app-card title="本地海报图库" subtitle="这批图只存在当前设备缓存里，适合二次截图和热点传播。">
+      <app-card title="本地海报图库" subtitle="只展示可安全持久化的本地图片路径；H5 生成的大图默认不写入图库，避免撑爆本地缓存。">
         <view v-if="recentPosters.length > 0" class="poster-list">
           <view v-for="item in recentPosters" :key="item.id" class="poster-item">
             <view class="poster-item__thumb">

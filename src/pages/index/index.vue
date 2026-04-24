@@ -17,6 +17,7 @@ import {
 import { primaryTabItems } from '@/constants/navigation'
 import { cyberThemeHighlights } from '@/constants/theme'
 import { useRitualStore } from '@/stores'
+import { buildRitualEntryUrl, THEME_PREVIEW_PAGE_PATH, WORKBENCH_PAGE_PATH } from '@/utils/ritual-navigation'
 
 defineOptions({
   name: 'HomePage'
@@ -174,19 +175,21 @@ const nextActionLabel = computed(() => {
 
 function openSignalPreview() {
   void uni.navigateTo({
-    url: '/pages-sub/system/theme-preview'
+    url: THEME_PREVIEW_PAGE_PATH
   })
 }
 
 function openAncestorDomain() {
   void uni.redirectTo({
-    url: '/pages/workbench/index'
+    url: WORKBENCH_PAGE_PATH
   })
 }
 
 function openRitualEntry() {
   void uni.navigateTo({
-    url: `/pages-sub/cyber/ritual-entry?ancestor=${encodeURIComponent(ritualStore.recentAncestorName || DEFAULT_ANCESTOR_NAME)}`
+    url: buildRitualEntryUrl({
+      ancestorName: ritualStore.recentAncestorName || DEFAULT_ANCESTOR_NAME
+    })
   })
 }
 

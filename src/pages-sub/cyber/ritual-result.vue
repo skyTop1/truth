@@ -17,6 +17,15 @@ import {
 import { themePosterPalettes } from '@/constants/theme'
 import { useRitualStore } from '@/stores'
 import { createLocalId } from '@/utils/local-id'
+import { normalizePersistablePosterImageUrl } from '@/utils/poster-cache'
+import { drawRitualPoster } from '@/utils/ritual-poster'
+import {
+  buildRitualEntryUrl,
+  decodeRouteParam,
+  HOME_PAGE_PATH,
+  parseRouteListParam,
+  WORKBENCH_PAGE_PATH
+} from '@/utils/ritual-navigation'
 import { getCurrentPageOptions } from '@/utils/uni-page'
 
 import type { PosterStatus } from '@/types/status'
@@ -44,7 +53,7 @@ const ancestorName = ref('太爷爷')
 const incenseValue = ref('0')
 const signalValue = ref('0%')
 const ritualCount = ref('0')
-const message = ref('你向祖域上传了一次心意，祖先信号节点已被点亮。')
+const message = ref('你向本机祖域写入了一次心意，祖先信号节点已被点亮。')
 const actionKeys = ref<string[]>([])
 const isGeneratingPoster = ref(false)
 const posterImageUrl = ref<string>('')
@@ -57,17 +66,11 @@ const displayBadge = computed(() => {
 })
 
 const shareTitle = computed(() => {
-  return `${title.value} · ${displayBadge.value}`
+  return 'Truth 赛博祭祖 · 本地优先原型'
 })
 
 const sharePath = computed(() => {
-  const encodedTitle = encodeURIComponent(title.value)
-  const encodedBadge = encodeURIComponent(displayBadge.value)
-  const encodedAncestor = encodeURIComponent(ancestorName.value)
-  const encodedMessage = encodeURIComponent(message.value)
-  const encodedSelected = encodeURIComponent(actionKeys.value.join(','))
-
-  return `/pages-sub/cyber/ritual-result?ritualId=${encodeURIComponent(ritualId.value)}&title=${encodedTitle}&badge=${encodedBadge}&ancestor=${encodedAncestor}&incense=${incenseValue.value}&signal=${signalValue.value}&actions=${ritualCount.value}&selected=${encodedSelected}&message=${encodedMessage}`
+  return HOME_PAGE_PATH
 })
 
 const posterStatusMeta = computed(() => {
@@ -176,19 +179,19 @@ function applyPageOptions(options?: Record<string, string | undefined>) {
   }
 
   if (typeof options.ritualId === 'string' && options.ritualId.trim().length > 0) {
-    ritualId.value = decodeURIComponent(options.ritualId)
+    ritualId.value = decodeRouteParam(options.ritualId)
   }
 
   if (typeof options.title === 'string' && options.title.trim().length > 0) {
-    title.value = decodeURIComponent(options.title)
+    title.value = decodeRouteParam(options.title)
   }
 
   if (typeof options.badge === 'string' && options.badge.trim().length > 0) {
-    badge.value = formatRitualBadgeLabel(decodeURIComponent(options.badge))
+    badge.value = formatRitualBadgeLabel(decodeRouteParam(options.badge))
   }
 
   if (typeof options.ancestor === 'string' && options.ancestor.trim().length > 0) {
-    ancestorName.value = decodeURIComponent(options.ancestor)
+    ancestorName.value = decodeRouteParam(options.ancestor)
   }
 
   if (typeof options.incense === 'string' && options.incense.trim().length > 0) {
@@ -204,14 +207,11 @@ function applyPageOptions(options?: Record<string, string | undefined>) {
   }
 
   if (typeof options.selected === 'string' && options.selected.trim().length > 0) {
-    actionKeys.value = decodeURIComponent(options.selected)
-      .split(',')
-      .map((item) => item.trim())
-      .filter((item) => item.length > 0)
+    actionKeys.value = parseRouteListParam(options.selected)
   }
 
   if (typeof options.message === 'string' && options.message.trim().length > 0) {
-    message.value = decodeURIComponent(options.message)
+    message.value = decodeRouteParam(options.message)
   }
 }
 
@@ -233,15 +233,14 @@ onMounted(() => {
 onShareAppMessage(() => {
   return {
     title: shareTitle.value,
-    path: sharePath.value,
-    imageUrl: posterImageUrl.value || undefined
+    path: sharePath.value
   }
 })
 
 function goBack() {
   if (getCurrentPages().length <= 1) {
     void uni.redirectTo({
-      url: '/pages/index/index'
+      url: HOME_PAGE_PATH
     })
     return
   }
@@ -251,13 +250,17 @@ function goBack() {
 
 function replayRitual() {
   void uni.redirectTo({
-    url: `/pages-sub/cyber/ritual-entry?ancestor=${encodeURIComponent(ancestorName.value)}&message=${encodeURIComponent(message.value)}&selected=${encodeURIComponent(actionKeys.value.join(','))}`
+    url: buildRitualEntryUrl({
+      ancestorName: ancestorName.value,
+      message: message.value,
+      selectedActionKeys: actionKeys.value
+    })
   })
 }
 
 function openAncestorDomain() {
   void uni.redirectTo({
-    url: '/pages/workbench/index'
+    url: WORKBENCH_PAGE_PATH
   })
 }
 
@@ -288,16 +291,24 @@ async function generatePoster(silent = false) {
     }
 
     posterImageUrl.value = renderedUrl ?? ''
-    ritualStore.upsertPosterRecord({
-      id: `poster-${ritualId.value}`,
-      ritualRecordId: ritualId.value,
-      ancestorName: ancestorName.value.trim(),
-      title: title.value,
-      badge: displayBadge.value,
-      imageUrl: posterImageUrl.value
-    })
+    const persistablePosterImageUrl = normalizePersistablePosterImageUrl(renderedUrl)
+
+    if (persistablePosterImageUrl.length > 0) {
+      ritualStore.upsertPosterRecord({
+        id: `poster-${ritualId.value}`,
+        ritualRecordId: ritualId.value,
+        ancestorName: ancestorName.value.trim(),
+        title: title.value,
+        badge: displayBadge.value,
+        imageUrl: persistablePosterImageUrl
+      })
+    }
+
     posterStatus.value = 'ready'
-    posterStatusDetail.value = '本地海报已重新生成，当前设备上的缓存也已更新。'
+    posterStatusDetail.value =
+      persistablePosterImageUrl.length > 0
+        ? '本地海报已重新生成，当前设备上的缓存也已更新。'
+        : '分享图已生成，可在当前页面预览或截图；为避免本地缓存过大，本次图片不写入祖域图库。'
 
     if (!silent) {
       void uni.showToast({
@@ -558,304 +569,23 @@ function parseMetricValue(value: string) {
 }
 
 function drawPoster(context: CanvasRenderingContext2D) {
-  const palette = activePosterPalette.value
-
-  /* ── Pass 1: measure dynamic Y positions (no drawing) ── */
-  context.fillStyle = palette.title
-  context.font = '74px sans-serif'
-  const titleLines = wrapText(context, title.value, 772, 2)
-  const titleBottom = 420 + (titleLines.length - 1) * 88
-
-  context.fillStyle = palette.bodyText
-  context.font = '34px sans-serif'
-  const messageLines = wrapText(context, message.value, 772, 3)
-  const messageBottom = titleBottom + 146 + (messageLines.length - 1) * 54
-
-  const metricTop = messageBottom + 202
-  const memoTop = metricTop + 258
-
-  context.fillStyle = palette.title
-  context.font = '46px sans-serif'
-  const memoLines = wrapText(context, '不是传统纪念页，是一张够离谱、够亮、够想转发的赛博战报。', 708, 3)
-  const memoTextBottom = memoTop + 130 + (memoLines.length - 1) * 62
-
-  const footerTop = Math.max(memoTop + 272 + 60, memoTextBottom + 60)
-  const panelBottom = footerTop + 164
-  const panelHeight = panelBottom - 72
-
-  /* ── Pass 2: draw background & panel ── */
-  const backgroundGradient = context.createLinearGradient(0, 0, 0, posterHeight)
-  backgroundGradient.addColorStop(0, palette.backgroundTop)
-  backgroundGradient.addColorStop(0.55, palette.backgroundMid)
-  backgroundGradient.addColorStop(1, palette.backgroundBottom)
-
-  context.clearRect(0, 0, posterWidth, posterHeight)
-  context.fillStyle = backgroundGradient
-  context.fillRect(0, 0, posterWidth, posterHeight)
-
-  drawGlowOrb(context, 776, 192, 126, palette.glowPrimaryFill, palette.glowPrimaryShadow)
-  drawGlowOrb(context, 172, Math.min(1260, panelBottom - 92), 92, palette.glowSecondaryFill, palette.glowSecondaryShadow)
-
-  const panelGradient = context.createLinearGradient(60, 72, 900, panelBottom)
-  panelGradient.addColorStop(0, palette.panelTop)
-  panelGradient.addColorStop(0.7, palette.panelBottom)
-  panelGradient.addColorStop(1, palette.panelBottom)
-
-  fillRoundedRect(context, 60, 72, 840, panelHeight, 54, panelGradient)
-  strokeRoundedRect(context, 60, 72, 840, panelHeight, 54, palette.panelBorder, 2)
-
-  /* ── Pass 3: draw content inside panel ── */
-  context.fillStyle = palette.eyebrow
-  context.font = '32px sans-serif'
-  context.fillText(cyberStatusCopy.posterEyebrow, 94, 138)
-
-  drawBadgePill(context, displayBadge.value, 868, 104, palette)
-
-  const badgeGradient = context.createLinearGradient(94, 182, 250, 334)
-  badgeGradient.addColorStop(0, palette.glyphStart)
-  badgeGradient.addColorStop(1, palette.glyphEnd)
-  fillRoundedRect(context, 94, 182, 152, 152, 38, badgeGradient)
-  context.shadowBlur = 34
-  context.shadowColor = palette.glowPrimaryShadow
-  context.fillStyle = palette.glyphText
-  context.font = '80px sans-serif'
-  context.textAlign = 'center'
-  context.fillText('祖', 170, 282)
-  context.shadowBlur = 0
-  context.shadowColor = 'rgba(0, 0, 0, 0)'
-  context.textAlign = 'left'
-
-  context.fillStyle = palette.title
-  context.font = '74px sans-serif'
-  drawWrappedText(context, title.value, 94, 420, 772, 88, 2)
-
-  context.fillStyle = palette.ancestor
-  context.font = '38px sans-serif'
-  context.fillText(truncateText(context, ancestorName.value, 772), 94, titleBottom + 70)
-
-  context.fillStyle = palette.bodyText
-  context.font = '34px sans-serif'
-  drawWrappedText(context, message.value, 94, titleBottom + 146, 772, 54, 3)
-
-  fillRoundedRect(context, 94, messageBottom + 60, 772, 94, 30, palette.hintBackground)
-  strokeRoundedRect(context, 94, messageBottom + 60, 772, 94, 30, palette.hintBorder, 2)
-  context.fillStyle = palette.hintText
-  context.font = '28px sans-serif'
-  context.fillText('祖域传输通道已稳定，建议立即截图或单图转发。', 126, messageBottom + 117)
-
-  drawMetricCard(context, 94, metricTop, 240, 214, incenseValue.value, '香火值', palette.metricPrimary, palette)
-  drawMetricCard(context, 360, metricTop, 240, 214, signalValue.value, '信号强度', palette.metricSecondary, palette)
-  drawMetricCard(context, 626, metricTop, 240, 214, ritualCount.value, '仪式动作', palette.metricTertiary, palette)
-
-  fillRoundedRect(context, 94, memoTop, 772, 272, 38, palette.metricCardBackground)
-  strokeRoundedRect(context, 94, memoTop, 772, 272, 38, palette.metricCardBorder, 2)
-  context.fillStyle = palette.memoEyebrow
-  context.font = '26px sans-serif'
-  context.fillText(cyberStatusCopy.posterMemoEyebrow, 126, memoTop + 60)
-  context.fillStyle = palette.title
-  context.font = '46px sans-serif'
-  drawWrappedText(context, '不是传统纪念页，是一张够离谱、够亮、够想转发的赛博战报。', 126, memoTop + 130, 708, 62, 3)
-
-  context.strokeStyle = palette.divider
-  context.lineWidth = 2
-  context.beginPath()
-  context.moveTo(94, footerTop)
-  context.lineTo(866, footerTop)
-  context.stroke()
-
-  context.fillStyle = palette.signature
-  context.font = '30px sans-serif'
-  context.fillText(cyberStatusCopy.posterSignature, 94, footerTop + 64)
-  context.fillStyle = palette.action
-  context.font = '28px sans-serif'
-  context.fillText('截图、转发、再来一次', 94, footerTop + 110)
-}
-
-function drawGlowOrb(
-  context: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  radius: number,
-  fillColor: string,
-  shadowColor: string
-) {
-  context.shadowBlur = radius * 0.72
-  context.shadowColor = shadowColor
-  context.fillStyle = fillColor
-  context.beginPath()
-  context.arc(x, y, radius, 0, Math.PI * 2)
-  context.fill()
-  context.shadowBlur = 0
-  context.shadowColor = 'rgba(0, 0, 0, 0)'
-}
-
-function drawBadgePill(
-  context: CanvasRenderingContext2D,
-  label: string,
-  right: number,
-  top: number,
-  palette: (typeof themePosterPalettes)[keyof typeof themePosterPalettes]
-) {
-  context.font = '26px sans-serif'
-  const text = truncateText(context, label, 230)
-  const width = Math.max(162, context.measureText(text).width + 42)
-  const x = right - width
-
-  fillRoundedRect(context, x, top, width, 54, 999, palette.badgeBackground)
-  strokeRoundedRect(context, x, top, width, 54, 999, palette.badgeBorder, 2)
-  context.fillStyle = palette.badgeText
-  context.fillText(text, x + 22, top + 35)
-}
-
-function drawMetricCard(
-  context: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  value: string,
-  label: string,
-  accentColor: string,
-  palette: (typeof themePosterPalettes)[keyof typeof themePosterPalettes]
-) {
-  fillRoundedRect(context, x, y, width, height, 30, palette.metricCardBackground)
-  strokeRoundedRect(context, x, y, width, height, 30, palette.metricCardBorder, 2)
-
-  context.fillStyle = accentColor
-  context.font = '54px sans-serif'
-  context.fillText(value, x + 28, y + 88)
-  context.fillStyle = palette.metricLabel
-  context.font = '26px sans-serif'
-  context.fillText(label, x + 28, y + 140)
-  context.fillStyle = palette.metricCardBorder
-  context.fillRect(x + 28, y + 168, width - 56, 10)
-  context.fillStyle = accentColor
-  context.fillRect(x + 28, y + 168, Math.max(64, width - 138), 10)
-}
-
-function drawWrappedText(
-  context: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  maxWidth: number,
-  lineHeight: number,
-  maxLines: number
-) {
-  const lines = wrapText(context, text, maxWidth, maxLines)
-
-  lines.forEach((line, index) => {
-    context.fillText(line, x, y + index * lineHeight)
-  })
-
-  return y + (lines.length - 1) * lineHeight
-}
-
-function wrapText(context: CanvasRenderingContext2D, text: string, maxWidth: number, maxLines: number) {
-  const characters = [...text]
-  const lines: string[] = []
-  let currentLine = ''
-
-  characters.forEach((character) => {
-    const nextLine = `${currentLine}${character}`
-
-    if (currentLine.length > 0 && context.measureText(nextLine).width > maxWidth) {
-      lines.push(currentLine)
-      currentLine = character
-      return
+  drawRitualPoster(
+    context,
+    {
+      title: title.value,
+      displayBadge: displayBadge.value,
+      ancestorName: ancestorName.value,
+      message: message.value,
+      incenseValue: incenseValue.value,
+      signalValue: signalValue.value,
+      ritualCount: ritualCount.value,
+      palette: activePosterPalette.value
+    },
+    {
+      width: posterWidth,
+      height: posterHeight
     }
-
-    currentLine = nextLine
-  })
-
-  if (currentLine.length > 0) {
-    lines.push(currentLine)
-  }
-
-  if (lines.length <= maxLines) {
-    return lines
-  }
-
-  const visibleLines = lines.slice(0, maxLines)
-  visibleLines[maxLines - 1] = trimTextToWidth(context, visibleLines[maxLines - 1], maxWidth)
-  return visibleLines
-}
-
-function truncateText(context: CanvasRenderingContext2D, text: string, maxWidth: number) {
-  if (context.measureText(text).width <= maxWidth) {
-    return text
-  }
-
-  return trimTextToWidth(context, text, maxWidth)
-}
-
-function trimTextToWidth(context: CanvasRenderingContext2D, text: string, maxWidth: number) {
-  const ellipsis = '...'
-
-  if (context.measureText(text).width <= maxWidth) {
-    return text
-  }
-
-  let result = text
-
-  while (result.length > 1 && context.measureText(`${result}${ellipsis}`).width > maxWidth) {
-    result = result.slice(0, -1)
-  }
-
-  return `${result}${ellipsis}`
-}
-
-function fillRoundedRect(
-  context: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  radius: number,
-  fillStyle: string | CanvasGradient
-) {
-  roundedRectPath(context, x, y, width, height, radius)
-  context.fillStyle = fillStyle
-  context.fill()
-}
-
-function strokeRoundedRect(
-  context: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  radius: number,
-  strokeStyle: string,
-  lineWidth: number
-) {
-  roundedRectPath(context, x, y, width, height, radius)
-  context.lineWidth = lineWidth
-  context.strokeStyle = strokeStyle
-  context.stroke()
-}
-
-function roundedRectPath(
-  context: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  radius: number
-) {
-  const safeRadius = Math.min(radius, width / 2, height / 2)
-
-  context.beginPath()
-  context.moveTo(x + safeRadius, y)
-  context.lineTo(x + width - safeRadius, y)
-  context.arcTo(x + width, y, x + width, y + safeRadius, safeRadius)
-  context.lineTo(x + width, y + height - safeRadius)
-  context.arcTo(x + width, y + height, x + width - safeRadius, y + height, safeRadius)
-  context.lineTo(x + safeRadius, y + height)
-  context.arcTo(x, y + height, x, y + height - safeRadius, safeRadius)
-  context.lineTo(x, y + safeRadius)
-  context.arcTo(x, y, x + safeRadius, y, safeRadius)
-  context.closePath()
+  )
 }
 </script>
 

@@ -78,7 +78,7 @@ const posterStatusMetaMap: Record<PosterStatus, StatusDisplayMeta> = {
 }
 
 const ritualBadgeLabelMap: Record<string, string> = {
-  'INCENSE UPLOAD': '香火上传',
+  'INCENSE UPLOAD': '香火写入',
   'SIGNAL BOOST': '信号强化',
   'OFFERING DROP': '供品投送'
 }

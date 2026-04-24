@@ -2,6 +2,7 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import { DEFAULT_THEME_PRESET_ID, resolveThemePreset, themePresetByMode } from '@/constants/theme'
+import { readLocalCache, writeLocalCache } from '@/utils/local-storage'
 import { syncThemeRootClass } from '@/utils/theme-root'
 
 import type { ThemeMode, ThemePresetId } from '@/types/theme'
@@ -28,7 +29,7 @@ export const useAppStore = defineStore('app', () => {
 
   function setThemePreset(presetId: ThemePresetId) {
     applyThemePreset(presetId)
-    uni.setStorageSync(THEME_PRESET_STORAGE_KEY, presetId)
+    writeLocalCache(THEME_PRESET_STORAGE_KEY, presetId)
   }
 
   function setThemeMode(mode: ThemeMode) {
@@ -40,8 +41,8 @@ export const useAppStore = defineStore('app', () => {
   }
 
   function hydrateThemeMode() {
-    const cachedThemePreset: unknown = uni.getStorageSync(THEME_PRESET_STORAGE_KEY)
-    const cachedThemeMode: unknown = uni.getStorageSync(THEME_MODE_STORAGE_KEY)
+    const cachedThemePreset = readLocalCache<unknown>(THEME_PRESET_STORAGE_KEY, undefined)
+    const cachedThemeMode = readLocalCache<unknown>(THEME_MODE_STORAGE_KEY, undefined)
 
     if (
       cachedThemePreset === 'light' ||
@@ -57,7 +58,7 @@ export const useAppStore = defineStore('app', () => {
       const nextThemePreset = themePresetByMode[cachedThemeMode]
 
       applyThemePreset(nextThemePreset)
-      uni.setStorageSync(THEME_PRESET_STORAGE_KEY, nextThemePreset)
+      writeLocalCache(THEME_PRESET_STORAGE_KEY, nextThemePreset)
       return
     }
 

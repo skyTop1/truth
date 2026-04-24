@@ -7,10 +7,21 @@ import AppInput from '@/components/app/AppInput.vue'
 import AppNavBar from '@/components/app/AppNavBar.vue'
 import AppRitualAction from '@/components/app/AppRitualAction.vue'
 import AppTag from '@/components/app/AppTag.vue'
-import { DEFAULT_ANCESTOR_NAME, ritualActionTemplates, ritualMessageTemplates } from '@/constants/ritual'
+import {
+  DEFAULT_ANCESTOR_NAME,
+  MAX_RITUAL_ACTION_COUNT,
+  ritualActionTemplates,
+  ritualMessageTemplates
+} from '@/constants/ritual'
 import { cyberStatusCopy } from '@/constants/status'
 import { useRitualStore } from '@/stores'
 import { createLocalId } from '@/utils/local-id'
+import {
+  buildRitualResultUrl,
+  decodeRouteParam,
+  HOME_PAGE_PATH,
+  parseRouteListParam
+} from '@/utils/ritual-navigation'
 import { getCurrentPageOptions } from '@/utils/uni-page'
 
 import type { RitualRecord } from '@/types/ritual'
@@ -30,9 +41,11 @@ const selectedActionKeys = ref<string[]>([])
 function applySelectedActionKeys(keys: string[]) {
   const allowedKeySet = new Set(ritualActionTemplates.map((item) => item.key))
 
-  selectedActionKeys.value = keys.filter((item, index) => {
-    return item.length > 0 && allowedKeySet.has(item) && keys.indexOf(item) === index
-  })
+  selectedActionKeys.value = keys
+    .filter((item, index) => {
+      return item.length > 0 && allowedKeySet.has(item) && keys.indexOf(item) === index
+    })
+    .slice(0, MAX_RITUAL_ACTION_COUNT)
 }
 
 function applyPageOptions(options?: Record<string, string | undefined>) {
@@ -41,19 +54,15 @@ function applyPageOptions(options?: Record<string, string | undefined>) {
   }
 
   if (typeof options.ancestor === 'string' && options.ancestor.trim().length > 0) {
-    ancestorName.value = decodeURIComponent(options.ancestor)
+    ancestorName.value = decodeRouteParam(options.ancestor)
   }
 
   if (typeof options.message === 'string' && options.message.trim().length > 0) {
-    ritualMessage.value = decodeURIComponent(options.message)
+    ritualMessage.value = decodeRouteParam(options.message)
   }
 
   if (typeof options.selected === 'string' && options.selected.trim().length > 0) {
-    applySelectedActionKeys(
-      decodeURIComponent(options.selected)
-        .split(',')
-        .map((item) => item.trim())
-    )
+    applySelectedActionKeys(parseRouteListParam(options.selected))
   }
 }
 
@@ -97,13 +106,13 @@ const resolvedMessage = computed(() => {
     return ritualMessage.value.trim()
   }
 
-  return '今日祖域接入完成，电子香火已上传。'
+  return '今日祖域接入完成，电子香火已写入本机。'
 })
 
 function goBack() {
   if (getCurrentPages().length <= 1) {
     void uni.redirectTo({
-      url: '/pages/index/index'
+      url: HOME_PAGE_PATH
     })
     return
   }
@@ -114,6 +123,14 @@ function goBack() {
 function toggleAction(key: string) {
   if (selectedActionKeys.value.includes(key)) {
     selectedActionKeys.value = selectedActionKeys.value.filter((item) => item !== key)
+    return
+  }
+
+  if (selectedActionKeys.value.length >= MAX_RITUAL_ACTION_COUNT) {
+    void uni.showToast({
+      title: `最多点亮 ${MAX_RITUAL_ACTION_COUNT} 个仪式动作`,
+      icon: 'none'
+    })
     return
   }
 
@@ -157,14 +174,18 @@ function openResultPage() {
   ritualStore.rememberAncestorName(normalizedAncestorName)
 
   const ritualId = createLocalId('ritual')
-  const message = encodeURIComponent(resolvedMessage.value)
-  const badge = encodeURIComponent(ritualBadge.value)
-  const ancestor = encodeURIComponent(normalizedAncestorName)
-  const title = encodeURIComponent('今日赛博祭祖已完成')
-  const selected = encodeURIComponent(selectedActionKeys.value.join(','))
-
   void uni.navigateTo({
-    url: `/pages-sub/cyber/ritual-result?ritualId=${ritualId}&ancestor=${ancestor}&incense=${totalIncenseValue.value}&signal=${signalStrength.value}&actions=${selectedActions.value.length}&selected=${selected}&badge=${badge}&message=${message}&title=${title}`
+    url: buildRitualResultUrl({
+      ritualId,
+      ancestorName: normalizedAncestorName,
+      incenseValue: totalIncenseValue.value,
+      signalValue: signalStrength.value,
+      ritualCount: selectedActions.value.length,
+      selectedActionKeys: selectedActionKeys.value,
+      badge: ritualBadge.value,
+      message: resolvedMessage.value,
+      title: '今日赛博祭祖已完成'
+    })
   })
 }
 </script>
@@ -188,7 +209,7 @@ function openResultPage() {
         </view>
         <text class="ritual-page__title">{{ ancestorName }}</text>
         <text class="ritual-page__subtitle">
-          选择 1 到 3 个动作，不要拖。这个页面的目标不是复杂，而是让反馈够快、够亮、够有截图价值，同时默认只把记录留在本机。
+          选择 1 到 {{ MAX_RITUAL_ACTION_COUNT }} 个动作，不要拖。这个页面的目标不是复杂，而是让反馈够快、够亮、够有截图价值，同时默认只把记录留在本机。
         </text>
       </view>
 
@@ -236,7 +257,7 @@ function openResultPage() {
           v-model="ritualMessage"
           class="ritual-page__textarea"
           maxlength="40"
-          placeholder="比如：祖域信号稳定，今日电子香火已送达。"
+          placeholder="比如：祖域信号稳定，今日电子香火已写入本机。"
           placeholder-class="ritual-page__textarea-placeholder"
         />
         <view class="ritual-page__template-list">

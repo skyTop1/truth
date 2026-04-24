@@ -9,6 +9,7 @@ import AppTag from '@/components/app/AppTag.vue'
 import { useTheme } from '@/composables/useTheme'
 import { cyberStatusCopy } from '@/constants/status'
 import { themePresets } from '@/constants/theme'
+import { HOME_PAGE_PATH } from '@/utils/ritual-navigation'
 
 import type { ThemePresetId } from '@/types/theme'
 
@@ -27,6 +28,13 @@ const activeTokenGroups = computed(() => {
 })
 
 function goBack() {
+  if (getCurrentPages().length <= 1) {
+    void uni.redirectTo({
+      url: HOME_PAGE_PATH
+    })
+    return
+  }
+
   void uni.navigateBack()
 }
 

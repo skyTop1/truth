@@ -19,24 +19,28 @@ export function readLocalCache<T>(key: string, fallbackValue: T) {
 
 export function writeLocalCache<T>(key: string, value: T) {
   if (typeof uni === 'undefined' || typeof uni.setStorageSync !== 'function') {
-    return
+    return false
   }
 
   try {
     uni.setStorageSync(key, value)
+    return true
   } catch (error) {
     console.error(`[local-storage] failed to write key: ${key}`, error)
+    return false
   }
 }
 
 export function removeLocalCache(key: string) {
   if (typeof uni === 'undefined' || typeof uni.removeStorageSync !== 'function') {
-    return
+    return false
   }
 
   try {
     uni.removeStorageSync(key)
+    return true
   } catch (error) {
     console.error(`[local-storage] failed to remove key: ${key}`, error)
+    return false
   }
 }

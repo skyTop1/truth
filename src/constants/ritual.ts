@@ -3,12 +3,13 @@ import type { RitualActionTemplate } from '@/types/ritual'
 export const RITUAL_ARCHIVE_STORAGE_KEY = 'truth.cyber-ritual.archive'
 export const RITUAL_ARCHIVE_VERSION = 2
 export const DEFAULT_ANCESTOR_NAME = '太爷爷'
+export const MAX_RITUAL_ACTION_COUNT = 3
 
 export const ritualActionTemplates: RitualActionTemplate[] = [
   {
     key: 'incense',
-    title: '上传电子香火',
-    badge: '香火上传',
+    title: '写入电子香火',
+    badge: '香火写入',
     description: '给当前祖先节点注入一束霓虹香火，立刻让祭台回路变亮。',
     energy: 18,
     iconName: 'flame'
@@ -32,7 +33,7 @@ export const ritualActionTemplates: RitualActionTemplate[] = [
 ]
 
 export const ritualMessageTemplates = [
-  '祖域信号稳定，今日电子香火已送达。',
+  '祖域信号稳定，今日电子香火已写入本机。',
   '量子供品已投送，当前祖先节点发光正常。',
   '本机祭台同步完成，这次心意只留在你的设备里。'
 ]
